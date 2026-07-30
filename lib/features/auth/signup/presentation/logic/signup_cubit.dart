@@ -1,0 +1,100 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mediconsult/core/constants/api_result.dart';
+import 'package:mediconsult/core/network/save_user_token.dart';
+import 'package:mediconsult/core/services/firebase_token_service.dart';
+import 'package:mediconsult/features/auth/signup/data/register_request_model.dart';
+import 'package:mediconsult/features/auth/signup/presentation/logic/signup_state.dart';
+import 'package:mediconsult/features/auth/signup/repository/register_repository.dart';
+import 'package:mediconsult/core/services/firebase_crashlytics_service.dart';
+
+class SignupCubit extends Cubit<SignupState> {
+  final RegisterRepository _registerRepository;
+  SignupCubit(this._registerRepository) : super(const SignupState.initial());
+
+  Future<void> signup(
+    String cardNo,
+    String? nationalId,
+    String? passportNumber,
+    String phoneNumber,
+    String password,
+    String confirmPassword,
+    String lang,
+  ) async {
+    emit(const SignupState.loading());
+    
+    try {
+      // التأكد من إرسال إما nationalId أو passportNumber فقط (وليس كلاهما)
+      final hasNationalId = nationalId != null && nationalId.isNotEmpty;
+      final hasPassport = passportNumber != null && passportNumber.isNotEmpty;
+      
+      if (!hasNationalId && !hasPassport) {
+        emit(const SignupState.failed(
+          error: 'يجب إدخال إما الرقم القومي أو رقم جواز السفر',
+        ));
+        return;
+      }
+      
+      // إذا تم إدخال كلاهما، نعطي الأولوية للرقم القومي
+      final finalNationalId = hasNationalId ? nationalId : null;
+      final finalPassportNumber = hasNationalId ? null : (hasPassport ? passportNumber : null);
+      
+      final request = RegisterRequestModel(
+        cardNo: cardNo,
+        nationalId: finalNationalId,
+        passportNumber: finalPassportNumber,
+        phoneNumber: phoneNumber,
+        password: password,
+        confirmPassword: confirmPassword,
+      );
+      
+      final response = await _registerRepository.register(request, lang);
+      
+      response.when(
+        success: (response) async {
+          await saveUserToken(response.data!.token);
+          
+          // تعيين معرف المستخدم في Crashlytics (memberId)
+          final memberId = response.data!.memberId.toString();
+          await FirebaseCrashlyticsService.instance.setUserId(memberId);
+          
+          // إضافة memberId كـ custom key أيضاً للمزيد من المعلومات
+          await FirebaseCrashlyticsService.instance.setCustomKey(
+            key: 'member_id',
+            value: response.data!.memberId,
+          );
+          
+          emit(SignupState.success(response));
+          
+          // Send Firebase token to backend (non-blocking)
+          FirebaseTokenService.instance.sendTokenToBackend(lang);
+        },
+        failure: (message) {
+          // تسجيل خطأ التسجيل
+          FirebaseCrashlyticsService.instance.recordAuthError(
+            authMethod: 'signup',
+            errorMessage: message,
+            userId: cardNo,
+          );
+          
+          emit(SignupState.failed(error: message));
+        },
+      );
+    } catch (e, stackTrace) {
+      // تسجيل الأخطاء غير المتوقعة
+      await FirebaseCrashlyticsService.instance.recordError(
+        exception: e,
+        stackTrace: stackTrace,
+        reason: 'Signup process failed unexpectedly',
+        information: [
+          'Card No: $cardNo',
+          'National ID: $nationalId',
+          'Passport: $passportNumber',
+          'Phone: $phoneNumber',
+          'Language: $lang',
+        ],
+      );
+      
+      emit(const SignupState.failed(error: 'حدث خطأ غير متوقع'));
+    }
+  }
+}

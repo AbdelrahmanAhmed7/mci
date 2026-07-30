@@ -1,0 +1,456 @@
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mediconsult/core/error/app_error_handler.dart';
+import 'package:mediconsult/core/theming/app_colors.dart';
+import 'package:mediconsult/features/network/logic/network_cubit.dart';
+import 'package:mediconsult/features/network/logic/network_state.dart';
+import 'package:mediconsult/features/network/presentation/widgets/network_categories_list.dart';
+import 'package:mediconsult/features/network/presentation/widgets/network_filter_bottom_sheet.dart';
+import 'package:mediconsult/features/network/presentation/widgets/network_providers_list.dart';
+import 'package:mediconsult/features/network/presentation/widgets/network_search_bar.dart';
+import 'package:mediconsult/shared/widgets/page_header.dart';
+import 'package:mediconsult/shared/widgets/custom_showcase.dart';
+import 'package:mediconsult/core/widgets/smooth_shimmer.dart';
+// ignore_for_file: deprecated_member_use
+
+class NetworkScreen extends StatefulWidget {
+  const NetworkScreen({super.key});
+
+  @override
+  State<NetworkScreen> createState() => _NetworkScreenState();
+}
+
+class _NetworkScreenState extends State<NetworkScreen> {
+  final TextEditingController _searchController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
+  bool _isLoadingMore = false;
+  bool _hasLoadedInitialData = false;
+  bool _hasInitializedLocation = false;
+  bool _isShowCaseActive = false;
+  int _showcaseIndex = -1; // -1 means showcase is not active
+  String? _previousSearchText;
+
+  // Showcase keys
+  final GlobalKey _categoriesKey = GlobalKey();
+  final GlobalKey _searchKey = GlobalKey();
+  final GlobalKey _navigateKey = GlobalKey();
+  final GlobalKey _phoneKey = GlobalKey();
+
+  // Key to access NetworkSearchBar state
+  final GlobalKey _searchBarKey = GlobalKey();
+
+  @override
+  void initState() {
+    super.initState();
+
+    _scrollController.addListener(_onScroll);
+
+    // Request location and load providers after frame is built
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _initializeLocation();
+      // إضافة listener على حقل البحث بعد بناء الـ widget
+      _setupSearchListener();
+    });
+  }
+
+  void _setupSearchListener() {
+    _searchController.addListener(_onSearchTextChanged);
+  }
+
+  void _onSearchTextChanged() {
+    // Skip listener if ShowCase is active to prevent freeze
+    if (_isShowCaseActive) {
+      _previousSearchText = _searchController.text;
+      return;
+    }
+
+    if (!mounted) return;
+
+    final currentText = _searchController.text;
+
+    // لو النص اتغير من filled لـ empty، نرجع للقائمة الأصلية
+    if (currentText.isEmpty &&
+        _previousSearchText != null &&
+        _previousSearchText!.isNotEmpty) {
+      // Use Future.microtask to ensure this runs after current frame
+      Future.microtask(() {
+        if (!mounted || _isShowCaseActive) return;
+        try {
+          final cubit = context.read<NetworkCubit>();
+          // البحث بدون searchKey يرجع للقائمة الأصلية
+          cubit.searchProviders(
+            searchKey: null,
+            categoryId: cubit.selectedCategoryId,
+            governmentId: cubit.selectedGovernmentId,
+            cityId: cubit.selectedCityId,
+            resetPage: true,
+            context: context,
+          );
+        } catch (e) {
+          // Ignore errors during showcase
+        }
+      });
+    }
+    _previousSearchText = currentText;
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    if (!_hasLoadedInitialData) {
+      final cubit = context.read<NetworkCubit>();
+      cubit.getCategories(context: context);
+      cubit.getGovernments(context: context);
+      _hasLoadedInitialData = true;
+    }
+  }
+
+  Future<void> _initializeLocation() async {
+    // Only initialize location once per screen instance
+    if (_hasInitializedLocation) return;
+
+    final cubit = context.read<NetworkCubit>();
+
+    // Check permission status first before showing dialog
+    await cubit.requestLocationWithDialog(context);
+
+    _hasInitializedLocation = true;
+  }
+
+  void _onScroll() async {
+    if (_isLoadingMore) return;
+
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent * 0.9) {
+      _isLoadingMore = true;
+      try {
+        await context.read<NetworkCubit>().loadMoreProviders(context: context);
+      } finally {
+        _isLoadingMore = false;
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _searchController.removeListener(_onSearchTextChanged);
+    _searchController.dispose();
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _showFilterBottomSheet() {
+    final cubit = context.read<NetworkCubit>();
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (bottomSheetContext) => BlocProvider.value(
+        value: cubit,
+        child: const NetworkFilterBottomSheet(),
+      ),
+    );
+  }
+
+  void _startShowcase() {
+    // Remove listener before starting showcase
+    _searchController.removeListener(_onSearchTextChanged);
+
+    // Unfocus and hide keyboard
+    FocusManager.instance.primaryFocus?.unfocus();
+    FocusScope.of(context).unfocus();
+    SystemChannels.textInput.invokeMethod('TextInput.hide');
+
+    setState(() {
+      _showcaseIndex = 0;
+      _isShowCaseActive = true;
+    });
+  }
+
+  void _nextShowcase() {
+    if (_showcaseIndex < _showcaseKeys.length - 1) {
+      setState(() {
+        _showcaseIndex++;
+      });
+    } else {
+      _dismissShowcase();
+    }
+  }
+
+  void _dismissShowcase() {
+    setState(() {
+      _showcaseIndex = -1;
+      _isShowCaseActive = false;
+    });
+
+    // Re-add the listener after a small delay to ensure state is updated
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        setState(() {});
+      }
+    });
+  }
+
+  List<GlobalKey> get _showcaseKeys => [
+    _categoriesKey,
+    _searchKey,
+    _navigateKey,
+    _phoneKey,
+  ];
+
+  List<String> get _showcaseDescriptions => [
+    'tutorial.network.categories'.tr(),
+    'tutorial.network.search'.tr(),
+    'Tap to navigate to provider location',
+    'Tap to call the provider',
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomShowcaseOverlay(
+      targetKeys: _showcaseKeys,
+      descriptions: _showcaseDescriptions,
+      currentIndex: _showcaseIndex,
+      onNext: _nextShowcase,
+      onDismiss: _dismissShowcase,
+      child: Scaffold(
+        backgroundColor: AppColors.lightGreyClr,
+        body: BlocListener<NetworkCubit, NetworkState>(
+          listener: (context, state) {
+            if (state is ProvidersError) {
+              AppErrorHandler.showErrorSnackBar(
+                context,
+                state.error,
+                onRetry: () {
+                  context.read<NetworkCubit>().searchProviders(resetPage: true);
+                },
+              );
+            }
+            if (state is CategoriesError) {
+              AppErrorHandler.showErrorSnackBar(
+                context,
+                state.error,
+                onRetry: () {
+                  context.read<NetworkCubit>().getCategories();
+                },
+              );
+            }
+          },
+          child: SafeArea(
+            child: Column(
+              children: [
+                PageHeader(
+                  title: 'network.title'.tr(),
+                  backPath: '/home',
+                  onHelp: () async {
+                    // Immediately remove listener to prevent any callbacks
+                    _searchController.removeListener(_onSearchTextChanged);
+
+                    // Force unfocus search field
+                    FocusScope.of(context).unfocus();
+                    FocusManager.instance.primaryFocus?.unfocus();
+                    SystemChannels.textInput.invokeMethod('TextInput.hide');
+
+                    // Try to unfocus through the search bar's focus node if accessible
+                    final searchBarState = _searchBarKey.currentState;
+                    if (searchBarState != null) {
+                      try {
+                        (searchBarState as dynamic).forceUnfocus();
+                      } catch (e) {
+                        // Ignore if method doesn't exist
+                      }
+                    }
+
+                    // Wait a bit to ensure focus is cleared
+                    await Future.delayed(const Duration(milliseconds: 300));
+
+                    if (!mounted) return;
+
+                    // Start custom showcase
+                    _startShowcase();
+                  },
+                ),
+                SizedBox(height: 16.h),
+
+                Expanded(
+                  child: Transform.translate(
+                    offset: Offset(0, -28.h),
+                    child: SingleChildScrollView(
+                      physics: const BouncingScrollPhysics(),
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16.w),
+                        child: Container(
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: AppColors.whiteClr,
+                            borderRadius: BorderRadius.circular(16.r),
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppColors.greyClr.withValues(
+                                  alpha: 0.08,
+                                ),
+                                blurRadius: 24,
+                                offset: const Offset(0, 8),
+                              ),
+                            ],
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.all(16.w),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                // Categories Section
+                                BlocBuilder<NetworkCubit, NetworkState>(
+                                  buildWhen: (previous, current) =>
+                                      current is CategoriesLoading ||
+                                      current is CategoriesSuccess ||
+                                      current is CategoriesError,
+                                  builder: (context, state) {
+                                    if (state is CategoriesLoading) {
+                                      return Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: List.generate(
+                                          3,
+                                          (index) => Padding(
+                                            padding: EdgeInsets.only(
+                                              bottom: 12.h,
+                                            ),
+                                            child: ShimmerCard(
+                                              height: 44.h,
+                                              borderRadius:
+                                                  BorderRadius.circular(12.r),
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    }
+
+                                    final categories = context
+                                        .read<NetworkCubit>()
+                                        .categories;
+
+                                    if (categories.isEmpty) {
+                                      return const SizedBox.shrink();
+                                    }
+
+                                    return CustomShowcase(
+                                      targetKey: _categoriesKey,
+                                      child: Container(
+                                        key: _categoriesKey,
+                                        child: BlocBuilder<NetworkCubit, NetworkState>(
+                                          buildWhen: (previous, current) =>
+                                              true,
+                                          builder: (context, state) {
+                                            final cubit = context
+                                                .read<NetworkCubit>();
+                                            return NetworkCategoriesList(
+                                              categories: categories,
+                                              selectedCategoryId:
+                                                  cubit.selectedCategoryId,
+                                              onCategorySelected: (categoryId) {
+                                                // Preserve existing filters (government, city, and search) when selecting category
+                                                cubit.searchProviders(
+                                                  searchKey: cubit
+                                                      .searchKey, // Preserve current search
+                                                  categoryId: categoryId,
+                                                  governmentId: cubit
+                                                      .selectedGovernmentId,
+                                                  cityId: cubit.selectedCityId,
+                                                  resetPage: true,
+                                                  context: context,
+                                                );
+                                              },
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+
+                                SizedBox(height: 16.h),
+
+                                // Search and Filter Bar
+                                CustomShowcase(
+                                  targetKey: _searchKey,
+                                  child: Container(
+                                    key: _searchKey,
+                                    child: NetworkSearchBar(
+                                      key: _searchBarKey,
+                                      searchController: _searchController,
+                                      isShowCaseActive: _isShowCaseActive,
+                                      onUnfocusRequested: () {
+                                        // Force unfocus when showcase starts
+                                        FocusScope.of(context).unfocus();
+                                        FocusManager.instance.primaryFocus
+                                            ?.unfocus();
+                                        SystemChannels.textInput.invokeMethod(
+                                          'TextInput.hide',
+                                        );
+                                      },
+                                      onFilterTap: _showFilterBottomSheet,
+                                      onSearchSubmitted: (value) async {
+                                        final cubit = context
+                                            .read<NetworkCubit>();
+
+                                        // Try to get user location but don't block search if it fails
+                                        if (cubit.userLatitude == null ||
+                                            cubit.userLongitude == null) {
+                                          try {
+                                            await cubit.getUserLocation();
+                                          } catch (e) {
+                                            // Location failed, but continue with search anyway
+                                            print('Location failed: $e');
+                                          }
+                                        }
+
+                                        // Preserve existing filters when searching
+                                        cubit.searchProviders(
+                                          searchKey: value.isNotEmpty
+                                              ? value
+                                              : null,
+                                          categoryId: cubit.selectedCategoryId,
+                                          governmentId:
+                                              cubit.selectedGovernmentId,
+                                          cityId: cubit.selectedCityId,
+                                          resetPage: true,
+                                          context: context,
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ),
+
+                                SizedBox(height: 16.h),
+
+                                // Providers List
+                                SizedBox(
+                                  height: 500.h,
+                                  child: NetworkProvidersList(
+                                    scrollController: _scrollController,
+                                    isLoadingMore: _isLoadingMore,
+                                    firstNavigateKey: _navigateKey,
+                                    firstPhoneKey: _phoneKey,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
