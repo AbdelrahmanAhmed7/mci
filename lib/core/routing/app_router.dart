@@ -17,6 +17,8 @@ import 'package:mediconsult/features/auth/signup/presentation/account_verified_s
 import 'package:mediconsult/features/auth/signup/presentation/logic/signup_cubit.dart';
 import 'package:mediconsult/features/auth/signup/presentation/sign_up_screen.dart';
 import 'package:mediconsult/features/chronic_medicines/screens/chronic_medicines_screen.dart';
+import 'package:mediconsult/features/e_card/presentation/cubit/e_card_cubit.dart';
+import 'package:mediconsult/features/e_card/presentation/screens/e_card_screen.dart';
 import 'package:mediconsult/features/family_members/presentation/cubit/family_members_cubit.dart';
 import 'package:mediconsult/features/family_members/presentation/family_members_screen.dart';
 import 'package:mediconsult/features/home/data/home_response_model.dart';
@@ -260,6 +262,15 @@ class AppRouter {
           return BlocProvider(
             create: (context) => sl<ContactCubit>(),
             child: const ContactUsScreen(),
+          );
+        },
+      ),
+      GoRoute(
+        path: '/e-card',
+        builder: (context, state) {
+          return BlocProvider(
+            create: (context) => sl<ECardCubit>()..load(lang: 'ar'),
+            child: const ECardScreen(),
           );
         },
       ),

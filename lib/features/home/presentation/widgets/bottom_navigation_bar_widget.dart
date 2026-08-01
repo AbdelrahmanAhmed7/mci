@@ -24,12 +24,12 @@ class BottomNavigationBarWidget extends StatefulWidget {
 class _BottomNavigationBarWidgetState extends State<BottomNavigationBarWidget>
     with SingleTickerProviderStateMixin {
   late AnimationController _indicatorController;
-  int _previousIndex = 0;
+  int _previousVisualIndex = 0;
 
   @override
   void initState() {
     super.initState();
-    _previousIndex = widget.currentIndex;
+    _previousVisualIndex = _pageIndexToVisualIndex(widget.currentIndex);
     _indicatorController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 300),
@@ -40,7 +40,7 @@ class _BottomNavigationBarWidgetState extends State<BottomNavigationBarWidget>
   void didUpdateWidget(covariant BottomNavigationBarWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.currentIndex != widget.currentIndex) {
-      _previousIndex = oldWidget.currentIndex;
+      _previousVisualIndex = _pageIndexToVisualIndex(oldWidget.currentIndex);
       _indicatorController.forward(from: 0);
     }
   }
@@ -55,6 +55,8 @@ class _BottomNavigationBarWidgetState extends State<BottomNavigationBarWidget>
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width - 32.w;
     final isRtl = Directionality.of(context) == ui.TextDirection.rtl;
+    final selectedVisualIndex = _pageIndexToVisualIndex(widget.currentIndex);
+    const visualItemCount = 5;
 
     return Padding(
       padding: EdgeInsets.only(bottom: 16.h, left: 16.w, right: 16.w),
@@ -84,14 +86,15 @@ class _BottomNavigationBarWidgetState extends State<BottomNavigationBarWidget>
                 ],
               ),
               child: Directionality(
-                textDirection:
-                    isRtl ? ui.TextDirection.rtl : ui.TextDirection.ltr,
+                textDirection: isRtl
+                    ? ui.TextDirection.rtl
+                    : ui.TextDirection.ltr,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: List.generate(4, (index) {
+                  children: List.generate(visualItemCount, (index) {
                     return _NavItem(
                       index: index,
-                      isSelected: widget.currentIndex == index,
+                      isSelected: selectedVisualIndex == index,
                       onTap: () {
                         HapticFeedbackService.instance.selectionClick();
                         widget.onTap(index);
@@ -108,12 +111,11 @@ class _BottomNavigationBarWidgetState extends State<BottomNavigationBarWidget>
             AnimatedBuilder(
               animation: _indicatorController,
               builder: (context, child) {
-                final currentPos = (widget.currentIndex * (screenWidth / 4)) +
-                    (screenWidth / 8) -
-                    27.w;
-                final previousPos = (_previousIndex * (screenWidth / 4)) +
-                    (screenWidth / 8) -
-                    27.w;
+                final itemWidth = screenWidth / visualItemCount;
+                final currentPos =
+                    (selectedVisualIndex * itemWidth) + (itemWidth / 2) - 27.w;
+                final previousPos =
+                    (_previousVisualIndex * itemWidth) + (itemWidth / 2) - 27.w;
 
                 final position = ui.lerpDouble(
                   previousPos,
@@ -133,10 +135,7 @@ class _BottomNavigationBarWidgetState extends State<BottomNavigationBarWidget>
                 duration: const Duration(milliseconds: 200),
                 curve: Curves.easeOutBack,
                 builder: (context, scale, child) {
-                  return Transform.scale(
-                    scale: scale,
-                    child: child,
-                  );
+                  return Transform.scale(scale: scale, child: child);
                 },
                 child: Container(
                   width: 54.w,
@@ -155,7 +154,7 @@ class _BottomNavigationBarWidgetState extends State<BottomNavigationBarWidget>
                   ),
                   padding: EdgeInsets.all(12.w),
                   child: Image.asset(
-                    _getIconPath(widget.currentIndex, true),
+                    _getIconPath(selectedVisualIndex, true),
                     fit: BoxFit.contain,
                     color: AppColors.whiteClr,
                   ),
@@ -175,8 +174,10 @@ class _BottomNavigationBarWidgetState extends State<BottomNavigationBarWidget>
       case 1:
         return 'bottom_nav.provider'.tr();
       case 2:
-        return 'bottom_nav.request'.tr();
+        return 'bottom_nav.my_card'.tr();
       case 3:
+        return 'bottom_nav.request'.tr();
+      case 4:
         return 'bottom_nav.profile'.tr();
       default:
         return '';
@@ -190,11 +191,28 @@ class _BottomNavigationBarWidgetState extends State<BottomNavigationBarWidget>
       case 1:
         return isActive ? AppAssets.providerActive : AppAssets.providerInactive;
       case 2:
-        return isActive ? AppAssets.requestActive : AppAssets.requestInactive;
+        return AppAssets.card;
       case 3:
+        return isActive ? AppAssets.requestActive : AppAssets.requestInactive;
+      case 4:
         return isActive ? AppAssets.profileActive : AppAssets.profileInactive;
       default:
         return '';
+    }
+  }
+
+  int _pageIndexToVisualIndex(int pageIndex) {
+    switch (pageIndex) {
+      case 0:
+        return 0;
+      case 1:
+        return 1;
+      case 2:
+        return 3;
+      case 3:
+        return 4;
+      default:
+        return 0;
     }
   }
 }
@@ -230,9 +248,10 @@ class _NavItemState extends State<_NavItem>
       vsync: this,
       duration: const Duration(milliseconds: 100),
     );
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.9).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    _scaleAnimation = Tween<double>(
+      begin: 1.0,
+      end: 0.9,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override
@@ -254,13 +273,10 @@ class _NavItemState extends State<_NavItem>
       child: AnimatedBuilder(
         animation: _scaleAnimation,
         builder: (context, child) {
-          return Transform.scale(
-            scale: _scaleAnimation.value,
-            child: child,
-          );
+          return Transform.scale(scale: _scaleAnimation.value, child: child);
         },
         child: SizedBox(
-          width: 70.w,
+          width: 58.w,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
@@ -283,8 +299,9 @@ class _NavItemState extends State<_NavItem>
                   color: widget.isSelected
                       ? AppColors.primaryClr
                       : AppColors.greyClr,
-                  fontWeight:
-                      widget.isSelected ? FontWeight.w600 : FontWeight.w400,
+                  fontWeight: widget.isSelected
+                      ? FontWeight.w600
+                      : FontWeight.w400,
                 ),
                 child: Text(
                   widget.label,

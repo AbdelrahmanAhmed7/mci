@@ -9,8 +9,10 @@ import 'package:mediconsult/core/constants/constants.dart';
 import 'package:mediconsult/core/helpers/shared_pref_helper.dart';
 import 'package:mediconsult/core/services/firebase_crashlytics_service.dart';
 import 'package:mediconsult/core/theming/app_colors.dart';
+import 'package:mediconsult/core/di/service_locator.dart';
 import 'package:mediconsult/features/home/presentation/cubit/cubit/home_cubit.dart';
 import 'package:mediconsult/features/home/presentation/cubit/cubit/home_state.dart';
+import 'package:mediconsult/features/e_card/repository/e_card_repository.dart';
 import 'package:mediconsult/features/profile/presentation/widgets/logout_dialog.dart';
 import 'package:mediconsult/features/profile/presentation/widgets/profile_header_widget.dart';
 import 'package:mediconsult/features/profile/presentation/widgets/profile_section_widget.dart';
@@ -66,6 +68,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
       // Clear token
       await SharedPrefHelper.removeData(SharedPrefKeys.userToken);
+      if (sl.isRegistered<ECardRepository>()) {
+        await sl<ECardRepository>().clearCurrentUserCache();
+      }
 
       // Update login status
       isLoggedInUser = false;

@@ -54,6 +54,7 @@ ApprovalItem _$ApprovalItemFromJson(Map<String, dynamic> json) => ApprovalItem(
   statusChar: json['statusChar'] as String,
   notes: json['notes'] as String?,
   approvalPdfUrl: json['approvalPdfUrl'] as String?,
+  rejectReason: json['rejectReason'] as String?,
 );
 
 Map<String, dynamic> _$ApprovalItemToJson(ApprovalItem instance) =>
@@ -69,6 +70,7 @@ Map<String, dynamic> _$ApprovalItemToJson(ApprovalItem instance) =>
       'statusChar': instance.statusChar,
       'notes': instance.notes,
       'approvalPdfUrl': instance.approvalPdfUrl,
+      'rejectReason': instance.rejectReason,
     };
 
 Pagination _$PaginationFromJson(Map<String, dynamic> json) => Pagination(

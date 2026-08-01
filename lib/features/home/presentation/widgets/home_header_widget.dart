@@ -1,12 +1,9 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mediconsult/core/constants/app_assets.dart';
 import 'package:mediconsult/core/theming/app_colors.dart';
 import 'package:mediconsult/core/theming/app_text_styles.dart';
-import 'package:mediconsult/core/widgets/image_shimmer.dart';
 import 'package:mediconsult/features/home/data/home_response_model.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:mediconsult/core/services/notification_badge_service.dart';
@@ -75,6 +72,27 @@ class HomeHeaderWidget extends StatelessWidget {
                 ],
               ),
             ),
+
+            // Call Us Icon
+            InkWell(
+              onTap: () {
+                context.push('/contact-us');
+              },
+              child: Container(
+                width: 30.w,
+                height: 30.h,
+                decoration: const BoxDecoration(
+                  color: AppColors.whiteClr,
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  CupertinoIcons.phone_fill,
+                  size: 20.w,
+                  color: AppColors.blackClr,
+                ),
+              ),
+            ),
+            SizedBox(width: 12.w),
 
             // Notification Icon with Badge
             InkWell(

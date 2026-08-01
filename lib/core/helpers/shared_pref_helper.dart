@@ -146,6 +146,22 @@ class SharedPrefHelper {
     }
   }
 
+  static Future<void> removeSecuredString(String key) async {
+    if (kDebugMode) debugPrint("SecureStorage : remove $key");
+
+    try {
+      await _secureStorage.delete(key: key);
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint("SecureStorage delete failed: $e");
+      }
+    }
+
+    if (Platform.isAndroid) {
+      await _removeFallback(key);
+    }
+  }
+
   // ---------------------- Clear ----------------------
 
   static Future<void> clearAllSecuredData() async {

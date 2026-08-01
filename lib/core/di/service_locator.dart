@@ -19,6 +19,11 @@ import 'package:mediconsult/features/auth/login/service/reset_password_api_servi
 import 'package:mediconsult/features/auth/signup/presentation/logic/signup_cubit.dart';
 import 'package:mediconsult/features/auth/signup/repository/register_repository.dart';
 import 'package:mediconsult/features/auth/signup/service/register_api_service.dart';
+import 'package:mediconsult/features/e_card/data/e_card_cache_owner_resolver.dart';
+import 'package:mediconsult/features/e_card/data/e_card_local_data_source.dart';
+import 'package:mediconsult/features/e_card/presentation/cubit/e_card_cubit.dart';
+import 'package:mediconsult/features/e_card/repository/e_card_repository.dart';
+import 'package:mediconsult/features/e_card/service/e_card_api_service.dart';
 import 'package:mediconsult/features/family_members/presentation/cubit/family_members_cubit.dart';
 import 'package:mediconsult/features/family_members/repository/family_member_repo.dart';
 import 'package:mediconsult/features/family_members/service/family_member_api_service.dart';
@@ -77,6 +82,7 @@ Future<void> setupServiceLocator() async {
     () => ResetPasswordApiService(dio),
   );
   sl.registerLazySingleton<HomeApiService>(() => HomeApiService(dio));
+  sl.registerLazySingleton<ECardApiService>(() => ECardApiService(dio));
   sl.registerLazySingleton<ProvidersApiService>(() => ProvidersApiService(dio));
   sl.registerLazySingleton<FamilyMemberApiService>(
     () => FamilyMemberApiService(dio),
@@ -102,6 +108,14 @@ Future<void> setupServiceLocator() async {
     () => MedicardNetworkApiService(medicardDio),
   );
 
+  // Local data sources
+  sl.registerLazySingleton<ECardLocalDataSource>(
+    () => SecureECardLocalDataSource(),
+  );
+  sl.registerLazySingleton<ECardCacheOwnerResolver>(
+    () => const ECardCacheOwnerResolver(),
+  );
+
   // Repositories
   sl.registerLazySingleton<LoginRepository>(() => LoginRepository(sl()));
   sl.registerLazySingleton<ProvidersRepository>(
@@ -112,6 +126,9 @@ Future<void> setupServiceLocator() async {
     () => ResetPasswordRepository(sl()),
   );
   sl.registerLazySingleton<HomeRepository>(() => HomeRepository(sl()));
+  sl.registerLazySingleton<ECardRepository>(
+    () => ECardRepository(sl(), sl(), sl()),
+  );
   sl.registerLazySingleton<FamilyMemberRepository>(
     () => FamilyMemberRepository(sl()),
   );
@@ -149,6 +166,7 @@ Future<void> setupServiceLocator() async {
   sl.registerFactory<ResendOtpCubit>(() => ResendOtpCubit(sl()));
   sl.registerFactory<VerifyOtpCubit>(() => VerifyOtpCubit(sl()));
   sl.registerFactory<HomeCubit>(() => HomeCubit(sl()));
+  sl.registerFactory<ECardCubit>(() => ECardCubit(sl()));
   sl.registerFactory<ProvidersCubit>(() => ProvidersCubit(sl()));
   sl.registerFactory<FamilyMembersCubit>(() => FamilyMembersCubit(sl()));
   sl.registerFactory<ApprovalRequestCubit>(() => ApprovalRequestCubit(sl()));

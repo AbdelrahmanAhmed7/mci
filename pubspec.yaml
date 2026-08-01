@@ -45,6 +45,8 @@ dependencies:
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   cached_network_image: ^3.4.1
+  flutter_cache_manager: ^3.4.1
+  crypto: ^3.0.6
   
   # Firebase Services
   firebase_core: ^4.1.1

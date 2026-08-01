@@ -58,6 +58,7 @@ RefundItem _$RefundItemFromJson(Map<String, dynamic> json) => RefundItem(
   refundReasonId: (json['refundReasonId'] as num?)?.toInt(),
   refundTypeId: (json['refundTypeId'] as num?)?.toInt(),
   attachmentsFolder: json['attachmentsFolder'] as String,
+  rejectReason: json['rejectReason'] as String?,
 );
 
 Map<String, dynamic> _$RefundItemToJson(RefundItem instance) =>
@@ -77,6 +78,7 @@ Map<String, dynamic> _$RefundItemToJson(RefundItem instance) =>
       'refundReasonId': instance.refundReasonId,
       'refundTypeId': instance.refundTypeId,
       'attachmentsFolder': instance.attachmentsFolder,
+      'rejectReason': instance.rejectReason,
     };
 
 PaginationInfo _$PaginationInfoFromJson(Map<String, dynamic> json) =>

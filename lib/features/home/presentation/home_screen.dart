@@ -31,6 +31,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   int _currentIndex = 0;
   StreamSubscription<void>? _refreshSubscription;
   final ScrollController _scrollController = ScrollController();
+  bool _isECardRouteOpen = false;
   // Flag to control refresh
 
   @override
@@ -158,6 +159,64 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     }
   }
 
+  int? _pageIndexForVisualIndex(int visualIndex) {
+    switch (visualIndex) {
+      case 0:
+        return 0;
+      case 1:
+        return 1;
+      case 3:
+        return 2;
+      case 4:
+        return 3;
+      default:
+        return null;
+    }
+  }
+
+  Future<void> _handleBottomNavigationTap(int visualIndex) async {
+    if (visualIndex == 2) {
+      await _openECardRoute();
+      return;
+    }
+
+    final pageIndex = _pageIndexForVisualIndex(visualIndex);
+    if (pageIndex == null) return;
+
+    switch (pageIndex) {
+      case 0:
+        if (mounted) {
+          setState(() {
+            _currentIndex = 0;
+          });
+        }
+        break;
+      case 1:
+        context.push('/network');
+        break;
+      case 2:
+        context.push('/approval-request');
+        break;
+      case 3:
+        final homeResponse = context.read<HomeCubit>().state.maybeWhen(
+          loaded: (model) => model,
+          orElse: () => null,
+        );
+        context.push('/profile', extra: homeResponse);
+        break;
+    }
+  }
+
+  Future<void> _openECardRoute() async {
+    if (_isECardRouteOpen) return;
+    _isECardRouteOpen = true;
+    try {
+      await context.push('/e-card');
+    } finally {
+      _isECardRouteOpen = false;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return _buildHomeContent(context);
@@ -277,22 +336,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       ),
       bottomNavigationBar: BottomNavigationBarWidget(
         currentIndex: _currentIndex,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = 0;
-          });
-          if (index == 1) {
-            context.push('/network');
-          } else if (index == 2) {
-            context.push('/approval-request');
-          } else if (index == 3) {
-            final homeResponse = context.read<HomeCubit>().state.maybeWhen(
-              loaded: (model) => model,
-              orElse: () => null,
-            );
-            context.push('/profile', extra: homeResponse);
-          }
-        },
+        onTap: _handleBottomNavigationTap,
       ),
     );
   }

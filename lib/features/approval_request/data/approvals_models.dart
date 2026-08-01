@@ -16,7 +16,8 @@ class ApprovalsResponse {
     this.data,
   });
 
-  factory ApprovalsResponse.fromJson(Map<String, dynamic> json) => _$ApprovalsResponseFromJson(json);
+  factory ApprovalsResponse.fromJson(Map<String, dynamic> json) =>
+      _$ApprovalsResponseFromJson(json);
   Map<String, dynamic> toJson() => _$ApprovalsResponseToJson(this);
 }
 
@@ -32,7 +33,8 @@ class ApprovalsData {
     required this.filter,
   });
 
-  factory ApprovalsData.fromJson(Map<String, dynamic> json) => _$ApprovalsDataFromJson(json);
+  factory ApprovalsData.fromJson(Map<String, dynamic> json) =>
+      _$ApprovalsDataFromJson(json);
   Map<String, dynamic> toJson() => _$ApprovalsDataToJson(this);
 }
 
@@ -49,6 +51,7 @@ class ApprovalItem {
   final String statusChar; // P/A/R
   final String? notes;
   final String? approvalPdfUrl;
+  final String? rejectReason;
 
   ApprovalItem({
     required this.id,
@@ -62,9 +65,11 @@ class ApprovalItem {
     required this.statusChar,
     this.notes,
     this.approvalPdfUrl,
+    this.rejectReason,
   });
 
-  factory ApprovalItem.fromJson(Map<String, dynamic> json) => _$ApprovalItemFromJson(json);
+  factory ApprovalItem.fromJson(Map<String, dynamic> json) =>
+      _$ApprovalItemFromJson(json);
   Map<String, dynamic> toJson() => _$ApprovalItemToJson(this);
 }
 
@@ -86,7 +91,8 @@ class Pagination {
     required this.hasPreviousPage,
   });
 
-  factory Pagination.fromJson(Map<String, dynamic> json) => _$PaginationFromJson(json);
+  factory Pagination.fromJson(Map<String, dynamic> json) =>
+      _$PaginationFromJson(json);
   Map<String, dynamic> toJson() => _$PaginationToJson(this);
 }
 
@@ -96,7 +102,8 @@ class ApprovalsFilter {
 
   ApprovalsFilter({required this.status});
 
-  factory ApprovalsFilter.fromJson(Map<String, dynamic> json) => _$ApprovalsFilterFromJson(json);
+  factory ApprovalsFilter.fromJson(Map<String, dynamic> json) =>
+      _$ApprovalsFilterFromJson(json);
   Map<String, dynamic> toJson() => _$ApprovalsFilterToJson(this);
 }
 
@@ -114,7 +121,8 @@ class ApprovalPdfResponse {
     this.data,
   });
 
-  factory ApprovalPdfResponse.fromJson(Map<String, dynamic> json) => _$ApprovalPdfResponseFromJson(json);
+  factory ApprovalPdfResponse.fromJson(Map<String, dynamic> json) =>
+      _$ApprovalPdfResponseFromJson(json);
   Map<String, dynamic> toJson() => _$ApprovalPdfResponseToJson(this);
 }
 
@@ -124,8 +132,7 @@ class ApprovalPdfData {
 
   ApprovalPdfData({required this.url});
 
-  factory ApprovalPdfData.fromJson(Map<String, dynamic> json) => _$ApprovalPdfDataFromJson(json);
+  factory ApprovalPdfData.fromJson(Map<String, dynamic> json) =>
+      _$ApprovalPdfDataFromJson(json);
   Map<String, dynamic> toJson() => _$ApprovalPdfDataToJson(this);
 }
-
-

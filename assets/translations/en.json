@@ -431,6 +431,7 @@
     "to_request_approval": " to request approval",
     "approval_not_found": "Approval request not found or no longer available",
     "cannot_open_pdf": "Unable to open approval PDF",
+    "reject_reason": "Rejection reason",
     "status": {
       "approved": "Approved",
       "rejected": "Rejected",
@@ -491,6 +492,7 @@
     "time": "Time: ",
     "amount": "Amount",
     "view_details": "View Details",
+    "reject_reason": "Rejection reason",
     "empty_state_title": "No Refund Requests Yet",
     "empty_state": "You don't have any requests click\nbutton ",
     "to_request_refund": " to request refund",
@@ -585,6 +587,18 @@
     "spouse": "Spouse",
     "son": "Son"
   },
+  "e_card": {
+    "title": "My Membership Card",
+    "member_name": "Member Name",
+    "member_code": "Member Code",
+    "mci_card_number": "MCI Card",
+    "mci_id": "MCI ID:",
+    "plan_tier": "Plan Tier",
+    "policy_expiry_date": "Policy Expiry Date",
+    "coverage_notes": "Coverage Notes",
+    "unable_to_load": "Unable to load E-Card",
+    "no_data": "No E-Card data available"
+  },
   "terms_policy": {
     "title": "Terms & Privacy Policy",
     "terms": "Terms",
@@ -605,6 +619,7 @@
   "bottom_nav": {
     "home": "Home",
     "provider": "Provider",
+    "my_card": "My Card",
     "request": "Request",
     "profile": "Profile"
   },

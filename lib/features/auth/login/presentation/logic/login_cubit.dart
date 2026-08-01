@@ -13,27 +13,30 @@ class LoginCubit extends Cubit<LoginState> {
 
   Future<void> login(String cardNo, String password, String lang) async {
     emit(const LoginState.loading());
-    
+
     try {
       final request = LoginRequestModel(cardNo: cardNo, password: password);
       final response = await _loginRepository.login(request, lang);
-      
+
       response.when(
         success: (response) async {
-          await saveUserToken(response.data!.token);
-          
+          await saveUserToken(
+            response.data!.token,
+            memberId: response.data!.memberId,
+          );
+
           // تعيين معرف المستخدم في Crashlytics (memberId)
           final memberId = response.data!.memberId.toString();
           await FirebaseCrashlyticsService.instance.setUserId(memberId);
-          
+
           // إضافة memberId كـ custom key أيضاً للمزيد من المعلومات
           await FirebaseCrashlyticsService.instance.setCustomKey(
             key: 'member_id',
             value: response.data!.memberId,
           );
-          
+
           emit(LoginState.success(response));
-          
+
           // Send Firebase token to backend (non-blocking)
           FirebaseTokenService.instance.sendTokenToBackend(lang);
         },
@@ -44,7 +47,7 @@ class LoginCubit extends Cubit<LoginState> {
             errorMessage: message,
             userId: cardNo,
           );
-          
+
           emit(LoginState.failed(error: message));
         },
       );
@@ -56,7 +59,7 @@ class LoginCubit extends Cubit<LoginState> {
         reason: 'Login process failed unexpectedly',
         information: ['Card No: $cardNo', 'Language: $lang'],
       );
-      
+
       emit(const LoginState.failed(error: 'حدث خطأ غير متوقع'));
     }
   }

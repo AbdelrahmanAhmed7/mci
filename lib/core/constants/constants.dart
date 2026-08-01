@@ -3,5 +3,6 @@ bool shouldShowOnboarding = true;
 
 class SharedPrefKeys {
   static const String userToken = 'userToken';
+  static const String memberId = 'memberId';
   static const String hasSeenOnboarding = 'hasSeenOnboarding';
 }

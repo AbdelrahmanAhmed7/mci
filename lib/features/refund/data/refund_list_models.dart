@@ -55,6 +55,7 @@ class RefundItem {
   final int? refundReasonId;
   final int? refundTypeId;
   final String attachmentsFolder;
+  final String? rejectReason;
 
   RefundItem({
     required this.id,
@@ -72,6 +73,7 @@ class RefundItem {
     this.refundReasonId,
     this.refundTypeId,
     required this.attachmentsFolder,
+    this.rejectReason,
   });
 
   factory RefundItem.fromJson(Map<String, dynamic> json) =>
@@ -106,9 +108,7 @@ class PaginationInfo {
 class FilterInfo {
   final String status;
 
-  FilterInfo({
-    required this.status,
-  });
+  FilterInfo({required this.status});
 
   factory FilterInfo.fromJson(Map<String, dynamic> json) =>
       _$FilterInfoFromJson(json);

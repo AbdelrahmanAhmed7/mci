@@ -21,23 +21,27 @@ class SignupCubit extends Cubit<SignupState> {
     String lang,
   ) async {
     emit(const SignupState.loading());
-    
+
     try {
       // التأكد من إرسال إما nationalId أو passportNumber فقط (وليس كلاهما)
       final hasNationalId = nationalId != null && nationalId.isNotEmpty;
       final hasPassport = passportNumber != null && passportNumber.isNotEmpty;
-      
+
       if (!hasNationalId && !hasPassport) {
-        emit(const SignupState.failed(
-          error: 'يجب إدخال إما الرقم القومي أو رقم جواز السفر',
-        ));
+        emit(
+          const SignupState.failed(
+            error: 'يجب إدخال إما الرقم القومي أو رقم جواز السفر',
+          ),
+        );
         return;
       }
-      
+
       // إذا تم إدخال كلاهما، نعطي الأولوية للرقم القومي
       final finalNationalId = hasNationalId ? nationalId : null;
-      final finalPassportNumber = hasNationalId ? null : (hasPassport ? passportNumber : null);
-      
+      final finalPassportNumber = hasNationalId
+          ? null
+          : (hasPassport ? passportNumber : null);
+
       final request = RegisterRequestModel(
         cardNo: cardNo,
         nationalId: finalNationalId,
@@ -46,25 +50,28 @@ class SignupCubit extends Cubit<SignupState> {
         password: password,
         confirmPassword: confirmPassword,
       );
-      
+
       final response = await _registerRepository.register(request, lang);
-      
+
       response.when(
         success: (response) async {
-          await saveUserToken(response.data!.token);
-          
+          await saveUserToken(
+            response.data!.token,
+            memberId: response.data!.memberId,
+          );
+
           // تعيين معرف المستخدم في Crashlytics (memberId)
           final memberId = response.data!.memberId.toString();
           await FirebaseCrashlyticsService.instance.setUserId(memberId);
-          
+
           // إضافة memberId كـ custom key أيضاً للمزيد من المعلومات
           await FirebaseCrashlyticsService.instance.setCustomKey(
             key: 'member_id',
             value: response.data!.memberId,
           );
-          
+
           emit(SignupState.success(response));
-          
+
           // Send Firebase token to backend (non-blocking)
           FirebaseTokenService.instance.sendTokenToBackend(lang);
         },
@@ -75,7 +82,7 @@ class SignupCubit extends Cubit<SignupState> {
             errorMessage: message,
             userId: cardNo,
           );
-          
+
           emit(SignupState.failed(error: message));
         },
       );
@@ -93,7 +100,7 @@ class SignupCubit extends Cubit<SignupState> {
           'Language: $lang',
         ],
       );
-      
+
       emit(const SignupState.failed(error: 'حدث خطأ غير متوقع'));
     }
   }
