@@ -11,6 +11,8 @@ import 'package:mediconsult/features/e_card/repository/e_card_cache_lookup.dart'
 import 'package:mediconsult/features/e_card/repository/e_card_repository.dart';
 
 class ECardCubit extends Cubit<ECardState> {
+  static const bool _useSeedData = bool.fromEnvironment('ECARD_SEED');
+
   final ECardRepository _repository;
   final ConnectivityService _connectivityService;
 
@@ -30,6 +32,11 @@ class ECardCubit extends Cubit<ECardState> {
 
   Future<void> load({required String lang, bool forceRefresh = false}) async {
     if (_isLoading) return;
+
+    if (_useSeedData) {
+      emit(const ECardLoaded(_seedData));
+      return;
+    }
 
     final currentState = state;
     final previousData = _previousData(currentState);
@@ -189,3 +196,40 @@ class ECardCubit extends Cubit<ECardState> {
     return super.close();
   }
 }
+
+const ECardData _seedData = ECardData(
+  memberId: 1001,
+  memberCode: '240918',
+  memberName: 'Abdelrahman Ahmed',
+  memberPhoto: '',
+  mciCard: '849302',
+  planTier: 'Gold',
+  planColor: '#C49A2C',
+  policyExpireDate: '2026-12-31T00:00:00',
+  insuranceCompanyName: 'Demo Insurance',
+  insuranceCompanyLogo: '',
+  qrCodeValue: 'MCI-ECARD-DEMO-1001',
+  qrCodeImageUrl: '',
+  coverageNotes: [
+    'الاقامة غرفة مزدوجة',
+    'خدمات الاسنان بموافقة مسبقة',
+    'النظارة الطبية بموافقة مسبقة',
+    'خدمات العلاج الطبيعي بموافقة مسبقة',
+    'الادوية العادية بدون تحمل',
+    'الكشف بالعيادات وخدمات الطوارئ بدون موافقة',
+    'خدمات المستشفيات بموافقة مسبقة',
+    'التحاليل والاشعة المغطاة بدون موافقة حتى ٣٥٠ جنيه',
+    'الادوية المغطاة بدون موافقة حتى ٣٥٠ جنيه',
+    'الادوية المزمنة بدون تحمل',
+    'الاقامة غرفة مزدوجة',
+    'خدمات الاسنان بموافقة مسبقة',
+    'النظارة الطبية بموافقة مسبقة',
+    'خدمات العلاج الطبيعي بموافقة مسبقة',
+    'الادوية العادية بدون تحمل',
+    'الكشف بالعيادات وخدمات الطوارئ بدون موافقة',
+    'خدمات المستشفيات بموافقة مسبقة',
+    'التحاليل والاشعة المغطاة بدون موافقة حتى ٣٥٠ جنيه',
+    'الادوية المغطاة بدون موافقة حتى ٣٥٠ جنيه',
+    'الادوية المزمنة بدون تحمل',
+  ],
+);

@@ -95,19 +95,20 @@ class _HealthTipsWidgetState extends State<HealthTipsWidget> {
   @override
   Widget build(BuildContext context) {
     final isArabic = context.locale.languageCode == 'ar';
+    final cardHeight = 180.h.clamp(160.0, 210.0);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           'home.health_tips'.tr(),
-          style: AppTextStyles.font16BlackMedium(context).copyWith(
-            fontWeight: FontWeight.w600,
-          ),
+          style: AppTextStyles.font16BlackMedium(
+            context,
+          ).copyWith(fontWeight: FontWeight.w600),
         ),
         SizedBox(height: 16.h),
         SizedBox(
-          height: 180.h,
+          height: cardHeight,
           child: PageView.builder(
             controller: _pageController,
             itemCount: _tips.length,
@@ -119,64 +120,86 @@ class _HealthTipsWidgetState extends State<HealthTipsWidget> {
             itemBuilder: (context, index) {
               final tip = _tips[index];
               // Check if title/desc are keys or raw strings
-              String title = tip.title.startsWith('home.') ? tip.title.tr() : tip.title;
-              String desc = tip.description.startsWith('home.') ? tip.description.tr() : tip.description;
+              String title = tip.title.startsWith('home.')
+                  ? tip.title.tr()
+                  : tip.title;
+              String desc = tip.description.startsWith('home.')
+                  ? tip.description.tr()
+                  : tip.description;
 
-              return Container(
-                margin: EdgeInsets.symmetric(horizontal: 4.w),
-                padding: EdgeInsets.all(16.w),
-                decoration: BoxDecoration(
-                  color: tip.backgroundColor,
-                  borderRadius: BorderRadius.circular(16.r),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  textDirection: isArabic ? ui.TextDirection.rtl : ui.TextDirection.ltr,
-                  children: [
-                    Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.only(
-                          right: isArabic ? 0 : 12.w,
-                          left: isArabic ? 12.w : 0,
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              title,
-                              style: AppTextStyles.font14BlackMedium(context).copyWith(
-                                fontWeight: FontWeight.w600,
-                              ),
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            SizedBox(height: 6.h),
-                            Text(
-                              desc,
-                              style: AppTextStyles.font14GreyRegular(context).copyWith(
-                                height: 1.3,
-                                fontSize: 12.sp,
-                              ),
-                              maxLines: 6,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ],
-                        ),
-                      ),
+              return LayoutBuilder(
+                builder: (context, constraints) {
+                  final imageSize = (constraints.maxHeight * 0.58).clamp(
+                    72.0,
+                    104.0,
+                  );
+                  final contentGap = 6.h.clamp(4.0, 7.0);
+
+                  return Container(
+                    margin: EdgeInsets.symmetric(horizontal: 4.w),
+                    padding: EdgeInsets.all(16.w.clamp(12.0, 16.0)),
+                    decoration: BoxDecoration(
+                      color: tip.backgroundColor,
+                      borderRadius: BorderRadius.circular(16.r),
                     ),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(12.r),
-                      child: Image.asset(
-                        tip.image,
-                        width: 110.w,
-                        height: 110.h,
-                        fit: BoxFit.contain,
-                      ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      textDirection: isArabic
+                          ? ui.TextDirection.rtl
+                          : ui.TextDirection.ltr,
+                      children: [
+                        Expanded(
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                              right: isArabic ? 0 : 12.w.clamp(8.0, 12.0),
+                              left: isArabic ? 12.w.clamp(8.0, 12.0) : 0,
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  title,
+                                  style: const TextStyle(
+                                    color: AppColors.blackClr,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w700,
+                                    height: 1.15,
+                                  ),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                SizedBox(height: contentGap),
+                                Flexible(
+                                  child: Text(
+                                    desc,
+                                    style: TextStyle(
+                                      color: AppColors.greyClr,
+                                      height: 1.22,
+                                      fontSize: 12.5,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                    maxLines: 5,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(12.r),
+                          child: Image.asset(
+                            tip.image,
+                            width: imageSize,
+                            height: imageSize,
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  );
+                },
               );
             },
           ),

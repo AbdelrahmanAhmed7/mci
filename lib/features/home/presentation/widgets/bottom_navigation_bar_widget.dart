@@ -1,10 +1,11 @@
+import 'dart:ui' as ui;
+
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mediconsult/core/constants/app_assets.dart';
-import 'package:mediconsult/core/theming/app_colors.dart';
 import 'package:mediconsult/core/services/haptic_feedback_service.dart';
-import 'package:easy_localization/easy_localization.dart';
-import 'dart:ui' as ui;
+import 'package:mediconsult/core/theming/app_colors.dart';
 
 class BottomNavigationBarWidget extends StatefulWidget {
   final int currentIndex;
@@ -101,6 +102,7 @@ class _BottomNavigationBarWidgetState extends State<BottomNavigationBarWidget>
                       },
                       label: _getLabel(index),
                       iconPath: _getIconPath(index, false),
+                      iconData: _getIconData(index),
                     );
                   }),
                 ),
@@ -153,10 +155,11 @@ class _BottomNavigationBarWidgetState extends State<BottomNavigationBarWidget>
                     ],
                   ),
                   padding: EdgeInsets.all(12.w),
-                  child: Image.asset(
-                    _getIconPath(selectedVisualIndex, true),
-                    fit: BoxFit.contain,
+                  child: _BottomNavIcon(
+                    iconPath: _getIconPath(selectedVisualIndex, true),
+                    iconData: _getIconData(selectedVisualIndex),
                     color: AppColors.whiteClr,
+                    size: 26.w,
                   ),
                 ),
               ),
@@ -184,20 +187,29 @@ class _BottomNavigationBarWidgetState extends State<BottomNavigationBarWidget>
     }
   }
 
-  String _getIconPath(int index, bool isActive) {
+  String? _getIconPath(int index, bool isActive) {
     switch (index) {
       case 0:
         return isActive ? AppAssets.homeActive : AppAssets.homeInactive;
       case 1:
         return isActive ? AppAssets.providerActive : AppAssets.providerInactive;
       case 2:
-        return AppAssets.card;
+        return null;
       case 3:
         return isActive ? AppAssets.requestActive : AppAssets.requestInactive;
       case 4:
         return isActive ? AppAssets.profileActive : AppAssets.profileInactive;
       default:
         return '';
+    }
+  }
+
+  IconData? _getIconData(int index) {
+    switch (index) {
+      case 2:
+        return Icons.credit_card_outlined;
+      default:
+        return null;
     }
   }
 
@@ -222,7 +234,8 @@ class _NavItem extends StatefulWidget {
   final bool isSelected;
   final VoidCallback onTap;
   final String label;
-  final String iconPath;
+  final String? iconPath;
+  final IconData? iconData;
 
   const _NavItem({
     required this.index,
@@ -230,6 +243,7 @@ class _NavItem extends StatefulWidget {
     required this.onTap,
     required this.label,
     required this.iconPath,
+    required this.iconData,
   });
 
   @override
@@ -284,11 +298,11 @@ class _NavItemState extends State<_NavItem>
               AnimatedOpacity(
                 duration: const Duration(milliseconds: 200),
                 opacity: widget.isSelected ? 0.0 : 1.0,
-                child: Image.asset(
-                  widget.iconPath,
-                  width: 22.w,
-                  height: 22.h,
+                child: _BottomNavIcon(
+                  iconPath: widget.iconPath,
+                  iconData: widget.iconData,
                   color: AppColors.greyClr,
+                  size: 22.w,
                 ),
               ),
               SizedBox(height: 4.h),
@@ -314,6 +328,40 @@ class _NavItemState extends State<_NavItem>
           ),
         ),
       ),
+    );
+  }
+}
+
+class _BottomNavIcon extends StatelessWidget {
+  const _BottomNavIcon({
+    required this.iconPath,
+    required this.iconData,
+    required this.color,
+    required this.size,
+  });
+
+  final String? iconPath;
+  final IconData? iconData;
+  final Color color;
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    if (iconData != null) {
+      return Icon(iconData, size: size, color: color);
+    }
+
+    final path = iconPath;
+    if (path == null || path.isEmpty) {
+      return SizedBox.square(dimension: size);
+    }
+
+    return Image.asset(
+      path,
+      width: size,
+      height: size,
+      fit: BoxFit.contain,
+      color: color,
     );
   }
 }

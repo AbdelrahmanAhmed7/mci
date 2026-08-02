@@ -170,9 +170,9 @@ class _ECardMetrics {
       companyLogoSize: (headerHeight * 0.65).clamp(30.0, 44.0),
       photoWidth: photoHeight * 0.86,
       photoHeight: photoHeight,
-      sectionGap: compact ? 8 : 12,
-      itemGap: compact ? 6 : 10,
-      labelFontSize: compact ? 9.5 : 11,
+      sectionGap: compact ? 6 : 12,
+      itemGap: compact ? 4 : 10,
+      labelFontSize: compact ? 11 : 12.5,
       valueFontSize: compact ? 12 : 14,
       nameFontSize: compact ? 15.5 : 19,
       noteFontSize: compact ? 10 : 11.5,
@@ -189,7 +189,6 @@ class _MembershipCardHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final companyName = data.insuranceCompanyName.trim();
     final companyLogo = data.insuranceCompanyLogo.trim();
 
     return Container(
@@ -200,8 +199,6 @@ class _MembershipCardHeader extends StatelessWidget {
       ),
       decoration: const BoxDecoration(gradient: AppColors.primaryGradient),
 
-      // Keep the MCI logo on the left exactly like the reference,
-      // while the company information stays on the right.
       child: Directionality(
         textDirection: ui.TextDirection.ltr,
         child: Row(
@@ -218,60 +215,31 @@ class _MembershipCardHeader extends StatelessWidget {
               ),
             ),
             const Spacer(),
-            if (companyName.isNotEmpty || _isValidHttpUrl(companyLogo))
-              Flexible(
-                child: Directionality(
-                  textDirection: ui.TextDirection.rtl,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      if (_isValidHttpUrl(companyLogo)) ...[
-                        CachedNetworkImage(
-                          imageUrl: companyLogo,
-                          imageBuilder: (context, provider) {
-                            return Container(
-                              width: metrics.companyLogoSize,
-                              height: metrics.companyLogoSize,
-                              decoration: BoxDecoration(
-                                color: AppColors.whiteClr,
-                                borderRadius: BorderRadius.circular(8),
-                                image: DecorationImage(
-                                  image: provider,
-                                  fit: BoxFit.contain,
-                                ),
-                              ),
-                            );
-                          },
-                          placeholder: (context, url) => SizedBox.square(
-                            dimension: metrics.companyLogoSize,
-                            child: const ImageShimmer(
-                              width: double.infinity,
-                              height: double.infinity,
-                            ),
-                          ),
-                          errorWidget: (context, url, error) =>
-                              const SizedBox.shrink(),
-                        ),
-                        const SizedBox(width: 8),
-                      ],
-                      if (companyName.isNotEmpty)
-                        Flexible(
-                          child: Text(
-                            companyName,
-                            style: TextStyle(
-                              color: AppColors.whiteClr,
-                              fontSize: metrics.compact ? 11 : 13,
-                              fontWeight: FontWeight.w700,
-                              height: 1.15,
-                            ),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.right,
-                          ),
-                        ),
-                    ],
+            if (_isValidHttpUrl(companyLogo))
+              CachedNetworkImage(
+                imageUrl: companyLogo,
+                imageBuilder: (context, provider) {
+                  return Container(
+                    width: metrics.companyLogoSize,
+                    height: metrics.companyLogoSize,
+                    decoration: BoxDecoration(
+                      color: AppColors.whiteClr,
+                      borderRadius: BorderRadius.circular(8),
+                      image: DecorationImage(
+                        image: provider,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  );
+                },
+                placeholder: (context, url) => SizedBox.square(
+                  dimension: metrics.companyLogoSize,
+                  child: const ImageShimmer(
+                    width: double.infinity,
+                    height: double.infinity,
                   ),
                 ),
+                errorWidget: (context, url, error) => const SizedBox.shrink(),
               ),
           ],
         ),
@@ -367,10 +335,8 @@ class _MemberSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Force the photo to stay on the left like the supplied design.
-    // The information itself remains Arabic RTL.
     return Directionality(
-      textDirection: ui.TextDirection.ltr,
+      textDirection: ui.TextDirection.rtl,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -471,51 +437,62 @@ class _MemberInformation extends StatelessWidget {
   Widget build(BuildContext context) {
     final expiryDate = _formatArabicPolicyDate(data.policyExpireDate);
 
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        _InfoBlock(
-          icon: Icons.person_outline,
-          label: ECardArabicText.memberName,
-          value: data.displayMemberName,
-          metrics: metrics,
-          isName: true,
-        ),
-        SizedBox(height: metrics.itemGap),
-        _TwoColumnInformationRow(
-          gap: metrics.itemGap,
-          first: _InfoBlock(
-            icon: Icons.badge_outlined,
-            label: ECardArabicText.memberCode,
-            value: data.memberCode.trim(),
-            metrics: metrics,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return FittedBox(
+          alignment: Alignment.topCenter,
+          fit: BoxFit.scaleDown,
+          child: SizedBox(
+            width: constraints.maxWidth,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                _InfoBlock(
+                  icon: Icons.person_outline,
+                  label: ECardArabicText.memberName,
+                  value: data.displayMemberName,
+                  metrics: metrics,
+                  isName: true,
+                ),
+                SizedBox(height: metrics.itemGap),
+                _TwoColumnInformationRow(
+                  gap: metrics.itemGap,
+                  first: _InfoBlock(
+                    icon: Icons.badge_outlined,
+                    label: ECardArabicText.memberCode,
+                    value: data.memberCode.trim(),
+                    metrics: metrics,
+                  ),
+                  second: _InfoBlock(
+                    icon: Icons.credit_card_outlined,
+                    label: ECardArabicText.mciCardNumber,
+                    value: data.mciCard.trim(),
+                    metrics: metrics,
+                  ),
+                ),
+                SizedBox(height: metrics.itemGap),
+                _TwoColumnInformationRow(
+                  gap: metrics.itemGap,
+                  first: _InfoBlock(
+                    icon: Icons.verified_user_outlined,
+                    label: ECardArabicText.planTier,
+                    value: data.planTier.trim(),
+                    metrics: metrics,
+                    accentColor: planColor,
+                    displayAsChip: true,
+                  ),
+                  second: _InfoBlock(
+                    icon: Icons.event_available_outlined,
+                    label: ECardArabicText.policyExpiryDate,
+                    value: expiryDate,
+                    metrics: metrics,
+                  ),
+                ),
+              ],
+            ),
           ),
-          second: _InfoBlock(
-            icon: Icons.credit_card_outlined,
-            label: ECardArabicText.mciCardNumber,
-            value: data.mciCard.trim(),
-            metrics: metrics,
-          ),
-        ),
-        SizedBox(height: metrics.itemGap),
-        _TwoColumnInformationRow(
-          gap: metrics.itemGap,
-          first: _InfoBlock(
-            icon: Icons.verified_user_outlined,
-            label: ECardArabicText.planTier,
-            value: data.planTier.trim(),
-            metrics: metrics,
-            accentColor: planColor,
-            displayAsChip: true,
-          ),
-          second: _InfoBlock(
-            icon: Icons.event_available_outlined,
-            label: ECardArabicText.policyExpiryDate,
-            value: expiryDate,
-            metrics: metrics,
-          ),
-        ),
-      ],
+        );
+      },
     );
   }
 }
@@ -598,10 +575,10 @@ class _InfoBlock extends StatelessWidget {
               Text(
                 label,
                 style: TextStyle(
-                  color: AppColors.greyClr,
+                  color: AppColors.blackClr.withValues(alpha: 0.68),
                   fontSize: metrics.labelFontSize,
-                  fontWeight: FontWeight.w500,
-                  height: 1.1,
+                  fontWeight: FontWeight.w700,
+                  height: 1.05,
                 ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
@@ -655,7 +632,7 @@ class _InfoBlock extends StatelessWidget {
                     ),
                     maxLines: isName ? 2 : 1,
                     overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.start,
+                    textAlign: isName ? TextAlign.right : TextAlign.start,
                   ),
                 ),
             ],
@@ -666,60 +643,149 @@ class _InfoBlock extends StatelessWidget {
   }
 }
 
-class _CoverageNotesSection extends StatelessWidget {
+class _CoverageNotesSection extends StatefulWidget {
   const _CoverageNotesSection({required this.notes, required this.metrics});
 
   final List<String> notes;
   final _ECardMetrics metrics;
 
   @override
+  State<_CoverageNotesSection> createState() => _CoverageNotesSectionState();
+}
+
+class _CoverageNotesSectionState extends State<_CoverageNotesSection> {
+  final ScrollController _scrollController = ScrollController();
+  bool _canScroll = false;
+  bool _isAtEnd = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_updateScrollHint);
+    WidgetsBinding.instance.addPostFrameCallback((_) => _updateScrollHint());
+  }
+
+  @override
+  void didUpdateWidget(covariant _CoverageNotesSection oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    WidgetsBinding.instance.addPostFrameCallback((_) => _updateScrollHint());
+  }
+
+  @override
+  void dispose() {
+    _scrollController
+      ..removeListener(_updateScrollHint)
+      ..dispose();
+    super.dispose();
+  }
+
+  void _updateScrollHint() {
+    if (!mounted || !_scrollController.hasClients) return;
+
+    final position = _scrollController.position;
+    final canScroll = position.maxScrollExtent > 1;
+    final isAtEnd =
+        !canScroll || position.pixels >= position.maxScrollExtent - 2;
+
+    if (_canScroll != canScroll || _isAtEnd != isAtEnd) {
+      setState(() {
+        _canScroll = canScroll;
+        _isAtEnd = isAtEnd;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: AppColors.splashScreenBackgroundClr.withValues(alpha: 0.48),
-        borderRadius: BorderRadius.circular(metrics.compact ? 10 : 13),
-        border: Border.all(color: AppColors.borderClr.withValues(alpha: 0.75)),
-      ),
-      child: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: metrics.compact ? 9 : 13,
-          vertical: metrics.compact ? 7 : 10,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final columnCount = _coverageColumnCount(
+          widget.notes.length,
+          constraints.maxWidth,
+        );
+        final rowsPerColumn = (widget.notes.length / columnCount).ceil();
+
+        return Stack(
           children: [
-            Text(
-              ECardArabicText.coverageNotes,
-              style: TextStyle(
-                color: AppColors.primaryClr,
-                fontSize: metrics.valueFontSize,
-                fontWeight: FontWeight.w800,
-                height: 1.1,
-              ),
-              textAlign: TextAlign.right,
-            ),
-            SizedBox(height: metrics.compact ? 5 : 7),
-            Expanded(
-              child: ListView.separated(
-                padding: EdgeInsets.zero,
-                itemCount: notes.length,
-                physics: const BouncingScrollPhysics(),
-                separatorBuilder: (context, index) {
-                  return Divider(
-                    height: metrics.compact ? 8 : 10,
-                    color: AppColors.borderClr.withValues(alpha: 0.65),
+            SingleChildScrollView(
+              controller: _scrollController,
+              physics: const BouncingScrollPhysics(),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: List.generate(columnCount, (columnIndex) {
+                  final start = columnIndex * rowsPerColumn;
+                  final end = math.min(
+                    start + rowsPerColumn,
+                    widget.notes.length,
                   );
-                },
-                itemBuilder: (context, index) {
-                  return _CoverageNoteRow(note: notes[index], metrics: metrics);
-                },
+                  final columnNotes = widget.notes.sublist(start, end);
+
+                  return Expanded(
+                    child: Padding(
+                      padding: EdgeInsetsDirectional.only(
+                        start: columnIndex == 0
+                            ? 0
+                            : (widget.metrics.compact ? 8 : 14),
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: List.generate(columnNotes.length, (index) {
+                          return Padding(
+                            padding: EdgeInsets.only(
+                              bottom: index == columnNotes.length - 1
+                                  ? 0
+                                  : (widget.metrics.compact ? 5 : 7),
+                            ),
+                            child: _CoverageNoteRow(
+                              note: columnNotes[index],
+                              metrics: widget.metrics,
+                            ),
+                          );
+                        }),
+                      ),
+                    ),
+                  );
+                }),
               ),
             ),
+            if (_canScroll && !_isAtEnd)
+              Positioned(
+                left: 0,
+                right: 0,
+                bottom: 0,
+                child: IgnorePointer(
+                  child: Container(
+                    height: widget.metrics.compact ? 22 : 28,
+                    alignment: Alignment.bottomCenter,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          AppColors.whiteClr.withValues(alpha: 0),
+                          AppColors.whiteClr.withValues(alpha: 0.94),
+                        ],
+                      ),
+                    ),
+                    child: Icon(
+                      Icons.keyboard_arrow_down_rounded,
+                      color: AppColors.primaryClr,
+                      size: widget.metrics.compact ? 17 : 20,
+                    ),
+                  ),
+                ),
+              ),
           ],
-        ),
-      ),
+        );
+      },
     );
   }
+}
+
+int _coverageColumnCount(int itemCount, double width) {
+  if (itemCount >= 7 && width >= 520) return 3;
+  if (itemCount >= 4 && width >= 340) return 2;
+  return 1;
 }
 
 class _CoverageNoteRow extends StatelessWidget {

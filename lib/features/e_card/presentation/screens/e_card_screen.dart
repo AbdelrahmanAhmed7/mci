@@ -1,9 +1,11 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mediconsult/core/constants/app_assets.dart';
 import 'package:mediconsult/core/theming/app_colors.dart';
 import 'package:mediconsult/core/theming/app_text_styles.dart';
 import 'package:mediconsult/features/e_card/presentation/e_card_arabic_text.dart';
@@ -21,6 +23,10 @@ class ECardScreen extends StatefulWidget {
 }
 
 class _ECardScreenState extends State<ECardScreen> with WidgetsBindingObserver {
+  static const MethodChannel _orientationChannel = MethodChannel(
+    'mediconsult/orientation',
+  );
+
   bool _isClosing = false;
   bool _allowPop = false;
   Completer<void>? _portraitMetricsCompleter;
@@ -44,17 +50,29 @@ class _ECardScreenState extends State<ECardScreen> with WidgetsBindingObserver {
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     _completePortraitMetricsWaiter();
-    unawaited(
-      SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]),
-    );
+    unawaited(_setPortraitOrientation());
     super.dispose();
   }
 
-  Future<void> _setLandscapeOrientation() {
-    return SystemChrome.setPreferredOrientations([
+  Future<void> _setLandscapeOrientation() async {
+    if (defaultTargetPlatform == TargetPlatform.iOS) {
+      await _setNativeOrientation('landscape');
+      return;
+    }
+
+    await SystemChrome.setPreferredOrientations([
       DeviceOrientation.landscapeLeft,
       DeviceOrientation.landscapeRight,
     ]);
+  }
+
+  Future<void> _setPortraitOrientation() async {
+    if (defaultTargetPlatform == TargetPlatform.iOS) {
+      await _setNativeOrientation('portrait');
+      return;
+    }
+
+    await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   }
 
   Future<void> _closeECard() async {
@@ -64,7 +82,7 @@ class _ECardScreenState extends State<ECardScreen> with WidgetsBindingObserver {
       setState(() {});
     }
 
-    await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+    await _setPortraitOrientation();
     await _waitForPortraitMetrics();
 
     if (!mounted) return;
@@ -123,6 +141,14 @@ class _ECardScreenState extends State<ECardScreen> with WidgetsBindingObserver {
     );
   }
 
+  Future<void> _setNativeOrientation(String orientation) async {
+    try {
+      await _orientationChannel.invokeMethod<void>(orientation);
+    } on MissingPluginException {
+      // Android and other platforms rely on SystemChrome only.
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final transitionColor = Theme.of(context).scaffoldBackgroundColor;
@@ -173,7 +199,7 @@ class _ECardTopBar extends StatelessWidget {
     final horizontalPadding = (maxWidth * 0.02).clamp(10.0, 18.0);
 
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: 4),
+      padding: EdgeInsets.fromLTRB(horizontalPadding, 12, horizontalPadding, 2),
       child: SizedBox(
         height: 42,
         child: Row(
@@ -200,7 +226,7 @@ class _ECardTopBar extends StatelessWidget {
             Expanded(
               child: Text(
                 ECardArabicText.title,
-                style: AppTextStyles.font16BlackMedium(
+                style: AppTextStyles.font14BlackMedium(
                   context,
                 ).copyWith(fontWeight: FontWeight.w700, height: 1),
                 maxLines: 1,
@@ -280,12 +306,49 @@ class _StableTransitionBackground extends StatelessWidget {
     return ColoredBox(
       color: color,
       child: Center(
-        child: SizedBox(
-          width: 28,
-          height: 28,
-          child: const CircularProgressIndicator(
-            color: AppColors.primaryClr,
-            strokeWidth: 2.4,
+        child: TweenAnimationBuilder<double>(
+          tween: Tween(begin: 0.92, end: 1),
+          duration: const Duration(milliseconds: 700),
+          curve: Curves.easeInOut,
+          builder: (context, scale, child) {
+            return Transform.scale(scale: scale, child: child);
+          },
+          onEnd: () {},
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 54,
+                height: 54,
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: AppColors.whiteClr,
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.cardShadowClr,
+                      blurRadius: 14,
+                      offset: const Offset(0, 5),
+                    ),
+                  ],
+                ),
+                child: Image.asset(
+                  AppAssets.logo,
+                  fit: BoxFit.contain,
+                  color: AppColors.primaryClr,
+                  colorBlendMode: BlendMode.srcIn,
+                ),
+              ),
+              const SizedBox(height: 14),
+              const SizedBox(
+                width: 30,
+                height: 30,
+                child: CircularProgressIndicator(
+                  color: AppColors.primaryClr,
+                  strokeWidth: 2.5,
+                ),
+              ),
+            ],
           ),
         ),
       ),

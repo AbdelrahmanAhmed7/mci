@@ -205,12 +205,16 @@ class _UserPlanCardWidgetState extends State<UserPlanCardWidget> {
                                 context,
                               ).copyWith(color: const Color(0xff484848)),
                             ),
-                            SizedBox(width: 20.w),
-                            Text(
-                              widget.data.memberId.toString(),
-                              style: AppTextStyles.font14GreyRegular(
-                                context,
-                              ).copyWith(color: const Color(0xff484848)),
+                            SizedBox(width: 12.w),
+                            Expanded(
+                              child: Text(
+                                widget.data.memberId.toString(),
+                                style: AppTextStyles.font14GreyRegular(
+                                  context,
+                                ).copyWith(color: const Color(0xff484848)),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
                           ],
                         ),
@@ -223,12 +227,16 @@ class _UserPlanCardWidgetState extends State<UserPlanCardWidget> {
                                 context,
                               ).copyWith(color: const Color(0xff484848)),
                             ),
-                            SizedBox(width: 18.w),
-                            Text(
-                              formattedDate,
-                              style: AppTextStyles.font14GreyRegular(
-                                context,
-                              ).copyWith(color: const Color(0xff484848)),
+                            SizedBox(width: 12.w),
+                            Expanded(
+                              child: Text(
+                                formattedDate,
+                                style: AppTextStyles.font14GreyRegular(
+                                  context,
+                                ).copyWith(color: const Color(0xff484848)),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
                           ],
                         ),
