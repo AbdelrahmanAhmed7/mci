@@ -9,7 +9,6 @@ import 'package:mediconsult/features/home/presentation/widgets/home_header_widge
 import 'package:mediconsult/features/home/presentation/widgets/user_plan_card_widget.dart';
 import 'package:mediconsult/features/home/presentation/widgets/quick_access_widget.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:mediconsult/features/home/presentation/widgets/khusm_promotion_widget.dart';
 import 'package:mediconsult/features/home/presentation/widgets/ongoing_request_widget.dart';
 import 'package:mediconsult/features/home/presentation/widgets/health_tips_widget.dart';
 import 'package:mediconsult/features/home/presentation/widgets/explore_widget.dart';
@@ -288,10 +287,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                               children: [
                                 RepaintBoundary(
                                   child: const QuickAccessWidget(),
-                                ),
-                                SizedBox(height: 24.h),
-                                RepaintBoundary(
-                                  child: const KhusmPromotionWidget(),
                                 ),
                                 SizedBox(height: 24.h),
                                 if (data.approvals.any(
