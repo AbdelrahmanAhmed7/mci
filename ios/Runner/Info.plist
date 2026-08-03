@@ -49,8 +49,14 @@
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>This app requires camera access to take photos for attachments.</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>This app may request calendar access to help manage healthcare appointments and reminders.</string>
+	<key>NSContactsUsageDescription</key>
+	<string>This app may request contacts access to help select or verify contact information for healthcare services.</string>
 	<key>NSLocalNetworkUsageDescription</key>
 	<string>This app requires network access to connect to healthcare services.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>This app requires location access to find nearby healthcare providers and support location-based healthcare services.</string>
 	<key>NSLocationTemporaryUsageDescriptionDictionary</key>
 	<dict>
 		<key>FindProviders</key>
@@ -62,6 +68,8 @@
 	<string>This app requires permission to save photos for document uploads.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>This app requires photo library access to upload attachments.</string>
+	<key>NSRemindersUsageDescription</key>
+	<string>This app may request reminders access to help schedule healthcare reminders.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

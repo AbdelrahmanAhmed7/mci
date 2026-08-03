@@ -101,10 +101,10 @@ post_install do |installer|
         'PERMISSION_LOCATION=1',
         'PERMISSION_CAMERA=1',
         'PERMISSION_PHOTOS=1',
-        'PERMISSION_MICROPHONE=1',
-        'PERMISSION_CONTACTS=1',
-        'PERMISSION_EVENTS=1',
-        'PERMISSION_REMINDERS=1',
+        'PERMISSION_MICROPHONE=0',
+        'PERMISSION_CONTACTS=0',
+        'PERMISSION_EVENTS=0',
+        'PERMISSION_REMINDERS=0',
       ]
     end
   end
