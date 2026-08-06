@@ -28,7 +28,6 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
   final TextEditingController _dobController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
-  String _selectedGender = 'Male';
 
   @override
   void initState() {
@@ -85,9 +84,8 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
                             _insuranceIdController.text = d.memberId.toString();
                             _phoneController.text = d.mobile;
                             _dobController.text = d.birthdate;
-                            _emailController.text = d.email;
-                            _addressController.text = d.address;
-                            _selectedGender = d.isMale ? 'Male' : 'Female';
+                            _emailController.text = d.email ?? '';
+                            _addressController.text = d.address ?? '';
                             setState(() {});
                           }
                         },
@@ -204,29 +202,12 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
           },
         ),
         SizedBox(height: 16.h),
-        // Gender selector is readonly by default - no changes needed
-        AppGenderSelector(
-          selectedGender: _selectedGender,
-          onGenderChanged: (gender) {
-            // Disabled for readonly mode
-            // setState(() {
-            //   _selectedGender = gender;
-            // });
-          },
-          isRequired: true,
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'Gender is required';
-            }
-            return null;
-          },
-        ),
-        SizedBox(height: 16.h),
         ProfileAppTextField(
           label: 'personal_info.email_address'.tr(),
           readOnly: true,
           controller: _emailController,
           keyboardType: TextInputType.emailAddress,
+          hintText: 'personal_info.not_provided'.tr(),
           validator: (value) {
             if (value != null && value.isNotEmpty) {
               if (!RegExp(
@@ -244,6 +225,7 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
           readOnly: true,
           controller: _addressController,
           maxLines: 3,
+          hintText: 'personal_info.not_provided'.tr(),
         ),
       ],
     );

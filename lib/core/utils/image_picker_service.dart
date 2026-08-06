@@ -27,14 +27,14 @@ class ImagePickerService {
     );
   }
 
-  /// Pick image from gallery with compression
+  /// Pick image from gallery with compression.
+  ///
+  /// Uses the system photo picker / document picker (no media permission needed).
   static Future<XFile?> pickFromGallery({
     double? maxWidth,
     double? maxHeight,
     int? imageQuality,
   }) async {
-    final ok = await AttachmentsPermissions.ensurePhotos();
-    if (!ok) return null;
     return _picker.pickImage(
       source: ImageSource.gallery,
       maxWidth: maxWidth ?? _maxWidth,

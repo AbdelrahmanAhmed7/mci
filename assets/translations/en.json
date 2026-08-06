@@ -1,4 +1,4 @@
-{
+﻿{
   "common": {
     "save": "Save",
     "submit": "Submit",
@@ -285,7 +285,8 @@
       "dob_required": "Date of birth is required",
       "gender_required": "Gender is required",
       "email_invalid": "Please enter a valid email address"
-    }
+    },
+    "not_provided": "Not provided"
   },
   "change_password": {
     "title": "Change Password",

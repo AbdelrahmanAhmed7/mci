@@ -28,8 +28,8 @@ class PersonalInfoData {
   final String mobile;
   final String birthdate;
   final bool isMale;
-  final String address;
-  final String email;
+  final String? address;
+  final String? email;
 
   PersonalInfoData({
     required this.memberName,
@@ -38,8 +38,8 @@ class PersonalInfoData {
     required this.mobile,
     required this.birthdate,
     required this.isMale,
-    required this.address,
-    required this.email,
+    this.address,
+    this.email,
   });
 
   factory PersonalInfoData.fromJson(Map<String, dynamic> json) => _$PersonalInfoDataFromJson(json);

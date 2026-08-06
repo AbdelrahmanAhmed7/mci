@@ -32,8 +32,8 @@ PersonalInfoData _$PersonalInfoDataFromJson(Map<String, dynamic> json) =>
       mobile: json['mobile'] as String,
       birthdate: json['birthdate'] as String,
       isMale: json['isMale'] as bool,
-      address: json['address'] as String,
-      email: json['email'] as String,
+      address: json['address'] as String?,
+      email: json['email'] as String?,
     );
 
 Map<String, dynamic> _$PersonalInfoDataToJson(PersonalInfoData instance) =>

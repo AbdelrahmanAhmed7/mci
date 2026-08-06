@@ -273,7 +273,12 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                   bottom: -70.h,
                                   left: 16.w,
                                   right: 16.w,
-                                  child: UserPlanCardWidget(data: data),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      context.push('/profile', extra: model);
+                                    },
+                                    child: UserPlanCardWidget(data: data),
+                                  ),
                                 ),
                               ],
                             ),
