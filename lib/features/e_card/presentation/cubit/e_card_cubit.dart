@@ -18,6 +18,7 @@ class ECardCubit extends Cubit<ECardState> {
 
   bool _isLoading = false;
   bool _offlineNoticeEmitted = false;
+  String _lastLang = 'ar';
   StreamSubscription<bool>? _connectivitySubscription;
   Timer? _connectivityDebounce;
 
@@ -33,6 +34,8 @@ class ECardCubit extends Cubit<ECardState> {
   Future<void> load({required String lang, bool forceRefresh = false}) async {
     if (_isLoading) return;
 
+    _lastLang = lang;
+
     if (_useSeedData) {
       emit(const ECardLoaded(_seedData));
       return;
@@ -44,6 +47,8 @@ class ECardCubit extends Cubit<ECardState> {
 
     _isLoading = true;
     try {
+      // Cache-first: read local cache; if valid (< 3 days), emit immediately
+      // so the user sees data instantly without waiting for the network.
       final cacheLookup = await _repository.readCache();
       if (isClosed) return;
 
@@ -58,6 +63,8 @@ class ECardCubit extends Cubit<ECardState> {
         emit(const ECardLoading());
       }
 
+      // Always hit the network to refresh data & cache timestamp, even when
+      // we already showed a cached copy above.
       await _fetchFreshAndEmit(
         lang: lang,
         cacheLookup: cacheLookup,
@@ -91,6 +98,8 @@ class ECardCubit extends Cubit<ECardState> {
         emit(ECardLoaded(data));
       },
       failure: (message) {
+        // Silent failure: if valid cache was already shown, keep it on screen
+        // and just stop the refreshing indicator — don't surface an error.
         final validFallback = fallbackEntry;
         if (validFallback != null && validFallback.isValid()) {
           _emitCachedData(
@@ -175,7 +184,9 @@ class ECardCubit extends Cubit<ECardState> {
     _connectivityDebounce?.cancel();
     _connectivityDebounce = Timer(const Duration(milliseconds: 450), () {
       if (!isClosed) {
-        load(lang: 'ar', forceRefresh: true);
+        // Use the last language the user actually requested, not a hardcoded
+        // default, so the reconnect-refresh respects the current locale.
+        load(lang: _lastLang, forceRefresh: true);
       }
     });
   }
