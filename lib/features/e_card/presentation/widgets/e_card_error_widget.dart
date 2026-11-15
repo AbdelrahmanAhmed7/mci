@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:mediconsult/core/theming/app_colors.dart';
 import 'package:mediconsult/features/e_card/presentation/e_card_arabic_text.dart';
 

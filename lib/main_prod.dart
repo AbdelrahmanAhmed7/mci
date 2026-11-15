@@ -15,7 +15,7 @@ import 'dart:ui';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:mediconsult/core/constants/constants.dart';
 import 'package:mediconsult/core/di/service_locator.dart';
 import 'package:mediconsult/core/helpers/extension.dart';

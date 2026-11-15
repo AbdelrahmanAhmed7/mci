@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Animated list item widget with staggered fade and slide animations.
 /// Optimized with RepaintBoundary for performance.

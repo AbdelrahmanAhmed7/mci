@@ -1,5 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:mediconsult/core/constants/api_result.dart';
 import 'package:mediconsult/core/error/app_failure.dart';
 import 'package:mediconsult/core/theming/app_colors.dart';
