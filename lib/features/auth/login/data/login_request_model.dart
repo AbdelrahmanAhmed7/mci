@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'login_request_model.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(createFactory: false)
 class LoginRequestModel {
   @JsonKey(name: "cardNo")
   final String cardNo;

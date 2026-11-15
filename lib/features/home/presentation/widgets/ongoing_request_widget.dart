@@ -1,5 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mediconsult/core/theming/app_text_styles.dart';
@@ -80,7 +80,7 @@ class OngoingRequestWidget extends StatelessWidget {
               itemCount: latestApprovals.length,
               separatorBuilder: (_, __) => SizedBox(width: 12.w),
               // Performance optimizations
-              cacheExtent: 500,
+              scrollCacheExtent: ScrollCacheExtent.pixels(500),
               addAutomaticKeepAlives: true,
               addRepaintBoundaries: true,
               physics: const BouncingScrollPhysics(),

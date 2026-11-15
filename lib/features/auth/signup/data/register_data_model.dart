@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'register_data_model.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(createToJson: false)
 class RegisterDataModel {
   @JsonKey(name: "token")
   final String token;

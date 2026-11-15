@@ -3,7 +3,7 @@ import 'login_data_model.dart';
 
 part 'login_response_model.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(createToJson: false)
 class LoginResponseModel {
   @JsonKey(name: "success")
   final bool success;

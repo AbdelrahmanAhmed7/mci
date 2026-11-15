@@ -15,11 +15,3 @@ LoginDataModel _$LoginDataModelFromJson(Map<String, dynamic> json) =>
       nationalId: LoginDataModel._fromJsonToString(json['nationalId']),
     );
 
-Map<String, dynamic> _$LoginDataModelToJson(LoginDataModel instance) =>
-    <String, dynamic>{
-      'token': instance.token,
-      'memberId': instance.memberId,
-      'memberName': instance.memberName,
-      'phoneNumber': instance.phoneNumber,
-      'nationalId': instance.nationalId,
-    };

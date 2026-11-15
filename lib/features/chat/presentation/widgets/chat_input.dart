@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mediconsult/core/theming/app_colors.dart';
 import 'package:mediconsult/core/theming/app_text_styles.dart';
@@ -98,7 +98,7 @@ class _ChatInputState extends State<ChatInput> {
               if (_hasText) {
                 widget.onSendMessage(widget.controller.text);
               } else {
-                // TODO: Implement voice recording functionality
+                // Voice recording is not implemented yet.
                 print('Start voice recording...');
               }
             },

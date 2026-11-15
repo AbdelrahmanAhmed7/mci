@@ -58,7 +58,7 @@
 //   void _onVerify() {
 //     if (_formKey.currentState!.validate()) {
 //       final otp = _controllers.map((c) => c.text).join();
-//       // TODO: handle OTP verification logic
+//       // OTP verification logic is not implemented yet.
 //       context.go('/account-verified');
 //     }
 //   }

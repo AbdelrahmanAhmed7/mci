@@ -15,11 +15,3 @@ RegisterDataModel _$RegisterDataModelFromJson(Map<String, dynamic> json) =>
       nationalId: RegisterDataModel._fromJsonToString(json['nationalId']),
     );
 
-Map<String, dynamic> _$RegisterDataModelToJson(RegisterDataModel instance) =>
-    <String, dynamic>{
-      'token': instance.token,
-      'memberId': instance.memberId,
-      'memberName': instance.memberName,
-      'phoneNumber': instance.phoneNumber,
-      'nationalId': instance.nationalId,
-    };

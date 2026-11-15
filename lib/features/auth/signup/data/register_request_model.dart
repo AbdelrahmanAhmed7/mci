@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'register_request_model.g.dart';
 
-@JsonSerializable(includeIfNull: false)
+@JsonSerializable(createFactory: false, includeIfNull: false)
 class RegisterRequestModel {
   @JsonKey(name: "cardNo")
   final String cardNo;

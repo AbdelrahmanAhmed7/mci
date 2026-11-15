@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class OptimizedListView extends StatelessWidget {
   /// The number of items the ListView should display
@@ -78,7 +78,7 @@ class OptimizedListView extends StatelessWidget {
         physics: physics ?? const AlwaysScrollableScrollPhysics(),
         addAutomaticKeepAlives: addAutomaticKeepAlives,
         addRepaintBoundaries: addRepaintBoundaries,
-        cacheExtent: cacheExtent,
+        scrollCacheExtent: ScrollCacheExtent.pixels(cacheExtent),
         reverse: reverse,
         scrollDirection: scrollDirection,
         itemCount: itemCount,
@@ -106,7 +106,7 @@ class OptimizedListView extends StatelessWidget {
       physics: physics ?? const AlwaysScrollableScrollPhysics(),
       addAutomaticKeepAlives: addAutomaticKeepAlives,
       addRepaintBoundaries: addRepaintBoundaries,
-      cacheExtent: cacheExtent,
+      scrollCacheExtent: ScrollCacheExtent.pixels(cacheExtent),
       reverse: reverse,
       scrollDirection: scrollDirection,
       itemCount: itemCount,

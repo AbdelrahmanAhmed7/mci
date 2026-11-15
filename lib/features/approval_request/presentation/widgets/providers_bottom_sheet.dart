@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -194,7 +194,7 @@ class _ProvidersBottomSheetState extends State<ProvidersBottomSheet> {
                         height: 1,
                         thickness: 0.5,
                       ),
-                      cacheExtent: 500,
+                      scrollCacheExtent: ScrollCacheExtent.pixels(500),
                       addAutomaticKeepAlives: true,
                       addRepaintBoundaries: true,
                       addSemanticIndexes: false,

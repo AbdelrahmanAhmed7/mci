@@ -3,7 +3,7 @@ import 'register_data_model.dart';
 
 part 'register_response_model.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(createToJson: false)
 class RegisterResponseModel {
   @JsonKey(name: "success")
   final bool success;

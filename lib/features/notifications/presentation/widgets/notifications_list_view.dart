@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -38,7 +38,7 @@ class NotificationsListView extends StatelessWidget {
       child: ListView.builder(
         controller: controller,
         physics: const AlwaysScrollableScrollPhysics(),
-        cacheExtent: 1000,
+        scrollCacheExtent: ScrollCacheExtent.pixels(1000),
         addAutomaticKeepAlives: false,
         addRepaintBoundaries: false,
         padding: EdgeInsets.all(16.w),

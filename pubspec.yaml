@@ -36,7 +36,7 @@ dependencies:
   json_annotation: ^4.9.0
   json_serializable: ^6.11.1
   freezed_annotation: ^3.1.0
-  freezed: ^3.2.3
+  freezed: ^4.0.1
   retrofit:
   
   # Storage & Caching
@@ -81,6 +81,11 @@ dependencies:
   easy_localization: ^3.0.8
   firebase_analytics: ^12.1.0
 
+  dio: any
+  material_ui: any
+  intl: any
+  cupertino_ui: any
+  http: any
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -96,6 +101,7 @@ dev_dependencies:
   # Linting tools
   flutter_lints: ^5.0.0
 
+  mocktail: any
 dependency_overrides:
   intl: ^0.18.1
 

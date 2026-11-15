@@ -16,10 +16,3 @@ LoginResponseModel _$LoginResponseModelFromJson(Map<String, dynamic> json) =>
           : LoginDataModel.fromJson(json['data'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$LoginResponseModelToJson(LoginResponseModel instance) =>
-    <String, dynamic>{
-      'success': instance.success,
-      'timestamp': instance.timestamp,
-      'message': instance.message,
-      'data': instance.data,
-    };

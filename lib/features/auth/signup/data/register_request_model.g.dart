@@ -6,17 +6,6 @@ part of 'register_request_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-RegisterRequestModel _$RegisterRequestModelFromJson(
-  Map<String, dynamic> json,
-) => RegisterRequestModel(
-  cardNo: json['cardNo'] as String,
-  nationalId: json['nationalId'] as String?,
-  passportNumber: json['passportNumber'] as String?,
-  phoneNumber: json['phoneNumber'] as String,
-  password: json['password'] as String,
-  confirmPassword: json['confirmPassword'] as String,
-);
-
 Map<String, dynamic> _$RegisterRequestModelToJson(
   RegisterRequestModel instance,
 ) => <String, dynamic>{

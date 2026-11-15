@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mediconsult/core/constants/app_assets.dart';
@@ -569,7 +569,7 @@ class _MedicardNetworkScreenState extends State<MedicardNetworkScreen> {
         child: InkWell(
           borderRadius: BorderRadius.circular(16.r),
           onTap: () {
-            // TODO: Navigate to provider details
+            // Provider details navigation is not implemented yet.
           },
           child: Padding(
             padding: EdgeInsets.all(12.w),
