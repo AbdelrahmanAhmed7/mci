@@ -1,121 +1,121 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-<dict>
-	<key>CADisableMinimumFrameDurationOnPhone</key>
-	<true/>
-	<key>CFBundleDevelopmentRegion</key>
-	<string>$(DEVELOPMENT_LANGUAGE)</string>
-	<key>CFBundleDisplayName</key>
-	<string>Mci Egypt</string>
-	<key>CFBundleExecutable</key>
-	<string>$(EXECUTABLE_NAME)</string>
-	<key>CFBundleIconName</key>
-	<string>AppIcon</string>
-	<key>CFBundleIdentifier</key>
-	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
-	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.0</string>
-	<key>CFBundleName</key>
-	<string>Mci Egypt</string>
-	<key>CFBundlePackageType</key>
-	<string>APPL</string>
-	<key>CFBundleShortVersionString</key>
-	<string>$(FLUTTER_BUILD_NAME)</string>
-	<key>CFBundleSignature</key>
-	<string>????</string>
-	<key>CFBundleVersion</key>
-	<string>$(FLUTTER_BUILD_NUMBER)</string>
-	<key>FirebaseCrashlyticsCollectionEnabled</key>
-	<true/>
-	<key>FirebaseMessagingAutoInitEnabled</key>
-	<true/>
-	<key>ITSAppUsesNonExemptEncryption</key>
-	<false/>
-	<key>LSRequiresIPhoneOS</key>
-	<true/>
-	<key>NSAppTransportSecurity</key>
 	<dict>
-		<key>NSExceptionDomains</key>
+		<key>CADisableMinimumFrameDurationOnPhone</key>
+		<true/>
+		<key>CFBundleDevelopmentRegion</key>
+		<string>$(DEVELOPMENT_LANGUAGE)</string>
+		<key>CFBundleDisplayName</key>
+		<string>Mci Egypt</string>
+		<key>CFBundleExecutable</key>
+		<string>$(EXECUTABLE_NAME)</string>
+		<key>CFBundleIconName</key>
+		<string>AppIcon</string>
+		<key>CFBundleIdentifier</key>
+		<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+		<key>CFBundleInfoDictionaryVersion</key>
+		<string>6.0</string>
+		<key>CFBundleName</key>
+		<string>Mci Egypt</string>
+		<key>CFBundlePackageType</key>
+		<string>APPL</string>
+		<key>CFBundleShortVersionString</key>
+		<string>$(FLUTTER_BUILD_NAME)</string>
+		<key>CFBundleSignature</key>
+		<string>????</string>
+		<key>CFBundleVersion</key>
+		<string>$(FLUTTER_BUILD_NUMBER)</string>
+		<key>FirebaseCrashlyticsCollectionEnabled</key>
+		<true/>
+		<key>FirebaseMessagingAutoInitEnabled</key>
+		<true/>
+		<key>ITSAppUsesNonExemptEncryption</key>
+		<false/>
+		<key>LSRequiresIPhoneOS</key>
+		<true/>
+		<key>NSAppTransportSecurity</key>
 		<dict>
-			<key>mediconsulteg.com</key>
+			<key>NSExceptionDomains</key>
 			<dict>
-				<key>NSExceptionRequiresForwardSecrecy</key>
-				<false/>
-				<key>NSIncludesSubdomains</key>
-				<true/>
+				<key>mediconsulteg.com</key>
+				<dict>
+					<key>NSExceptionRequiresForwardSecrecy</key>
+					<false/>
+					<key>NSIncludesSubdomains</key>
+					<true/>
+				</dict>
 			</dict>
 		</dict>
-	</dict>
-	<key>NSCameraUsageDescription</key>
-	<string>This app requires camera access to take photos for attachments.</string>
-	<key>NSCalendarsUsageDescription</key>
-	<string>This app may request calendar access to help manage healthcare appointments and reminders.</string>
-	<key>NSContactsUsageDescription</key>
-	<string>This app may request contacts access to help select or verify contact information for healthcare services.</string>
-	<key>NSLocalNetworkUsageDescription</key>
-	<string>This app requires network access to connect to healthcare services.</string>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>This app requires location access to find nearby healthcare providers and support location-based healthcare services.</string>
-	<key>NSLocationTemporaryUsageDescriptionDictionary</key>
-	<dict>
-		<key>FindProviders</key>
-		<string>Allow location access to find nearby healthcare providers</string>
-	</dict>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>This app requires location access to find nearby healthcare providers.</string>
-	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>This app requires permission to save photos for document uploads.</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>This app requires photo library access to upload attachments.</string>
-	<key>NSRemindersUsageDescription</key>
-	<string>This app may request reminders access to help schedule healthcare reminders.</string>
-	<key>UIApplicationSceneManifest</key>
-	<dict>
-		<key>UIApplicationSupportsMultipleScenes</key>
-		<false/>
-		<key>UISceneConfigurations</key>
+		<key>NSCameraUsageDescription</key>
+		<string>This app requires camera access to take photos for attachments.</string>
+		<key>NSCalendarsUsageDescription</key>
+		<string>This app may request calendar access to help manage healthcare appointments and reminders.</string>
+		<key>NSContactsUsageDescription</key>
+		<string>This app may request contacts access to help select or verify contact information for healthcare services.</string>
+		<key>NSLocalNetworkUsageDescription</key>
+		<string>This app requires network access to connect to healthcare services.</string>
+		<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+		<string>This app requires location access to find nearby healthcare providers and support location-based healthcare services.</string>
+		<key>NSLocationTemporaryUsageDescriptionDictionary</key>
 		<dict>
-			<key>UIWindowSceneSessionRoleApplication</key>
-			<array>
-				<dict>
-					<key>UISceneClassName</key>
-					<string>UIWindowScene</string>
-					<key>UISceneConfigurationName</key>
-					<string>flutter</string>
-					<key>UISceneDelegateClassName</key>
-					<string>FlutterSceneDelegate</string>
-					<key>UISceneStoryboardFile</key>
-					<string>Main</string>
-				</dict>
-			</array>
+			<key>FindProviders</key>
+			<string>Allow location access to find nearby healthcare providers</string>
 		</dict>
+		<key>NSLocationWhenInUseUsageDescription</key>
+		<string>This app requires location access to find nearby healthcare providers.</string>
+		<key>NSPhotoLibraryAddUsageDescription</key>
+		<string>This app requires permission to save photos for document uploads.</string>
+		<key>NSPhotoLibraryUsageDescription</key>
+		<string>This app requires photo library access to upload attachments.</string>
+		<key>NSRemindersUsageDescription</key>
+		<string>This app may request reminders access to help schedule healthcare reminders.</string>
+		<key>UIApplicationSceneManifest</key>
+		<dict>
+			<key>UIApplicationSupportsMultipleScenes</key>
+			<false/>
+			<key>UISceneConfigurations</key>
+			<dict>
+				<key>UIWindowSceneSessionRoleApplication</key>
+				<array>
+					<dict>
+						<key>UISceneClassName</key>
+						<string>UIWindowScene</string>
+						<key>UISceneConfigurationName</key>
+						<string>flutter</string>
+						<key>UISceneDelegateClassName</key>
+						<string>FlutterSceneDelegate</string>
+						<key>UISceneStoryboardFile</key>
+						<string>Main</string>
+					</dict>
+				</array>
+			</dict>
+		</dict>
+		<key>UIApplicationSupportsIndirectInputEvents</key>
+		<true/>
+		<key>UIBackgroundModes</key>
+		<array>
+			<string>fetch</string>
+			<string>remote-notification</string>
+		</array>
+		<key>UILaunchStoryboardName</key>
+		<string>LaunchScreen</string>
+		<key>UIMainStoryboardFile</key>
+		<string>Main</string>
+		<key>UIStatusBarHidden</key>
+		<false/>
+		<key>UISupportedInterfaceOrientations</key>
+		<array>
+			<string>UIInterfaceOrientationPortrait</string>
+			<string>UIInterfaceOrientationLandscapeLeft</string>
+			<string>UIInterfaceOrientationLandscapeRight</string>
+		</array>
+		<key>UISupportedInterfaceOrientations~ipad</key>
+		<array>
+			<string>UIInterfaceOrientationPortrait</string>
+			<string>UIInterfaceOrientationPortraitUpsideDown</string>
+			<string>UIInterfaceOrientationLandscapeLeft</string>
+			<string>UIInterfaceOrientationLandscapeRight</string>
+		</array>
 	</dict>
-	<key>UIApplicationSupportsIndirectInputEvents</key>
-	<true/>
-	<key>UIBackgroundModes</key>
-	<array>
-		<string>fetch</string>
-		<string>remote-notification</string>
-	</array>
-	<key>UILaunchStoryboardName</key>
-	<string>LaunchScreen</string>
-	<key>UIMainStoryboardFile</key>
-	<string>Main</string>
-	<key>UIStatusBarHidden</key>
-	<false/>
-	<key>UISupportedInterfaceOrientations</key>
-	<array>
-		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
-	</array>
-	<key>UISupportedInterfaceOrientations~ipad</key>
-	<array>
-		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationPortraitUpsideDown</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
-	</array>
-</dict>
 </plist>
