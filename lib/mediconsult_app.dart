@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'core/routing/app_router.dart';
+import 'core/theming/app_theme.dart';
 import 'package:mediconsult/core/widgets/offline_banner.dart';
 
 class MediConsultApp extends StatelessWidget {
@@ -18,6 +19,8 @@ class MediConsultApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         routerConfig: AppRouter.router,
         title: 'MediConsult',
+        theme: AppTheme.light(context),
+        themeMode: ThemeMode.light,
         localizationsDelegates: context.localizationDelegates,
         supportedLocales: context.supportedLocales,
         locale: context.locale,
