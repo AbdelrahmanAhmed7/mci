@@ -8,6 +8,7 @@ import 'package:mediconsult/core/di/service_locator.dart';
 import 'package:mediconsult/core/helpers/extension.dart';
 import 'package:mediconsult/core/helpers/shared_pref_helper.dart';
 import 'package:mediconsult/core/network/connectivity_service.dart';
+import 'package:mediconsult/core/helpers/runtime_platform.dart';
 import 'package:mediconsult/core/services/app_update_service.dart';
 import 'package:mediconsult/core/services/firebase_crashlytics_service.dart';
 import 'package:mediconsult/core/services/firebase_token_service.dart';
@@ -23,27 +24,35 @@ Future<void> main() async {
 
   await _clearDataOnReinstall();
 
-  await Future.wait<void>([
-    EasyLocalization.ensureInitialized(),
-    Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform),
-  ]);
+  await EasyLocalization.ensureInitialized();
+  if (!isIntelIosSimulator) {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  }
 
   // تهيئة خدمات Firebase
-  await FirebaseCrashlyticsService.instance.initialize();
+  if (!isIntelIosSimulator) {
+    await FirebaseCrashlyticsService.instance.initialize();
+  }
 
   // إرسال رسالة اختبار لتفعيل Crashlytics Console
-  await FirebaseCrashlyticsService.instance.log(
-    'App started successfully - ${DateTime.now()}',
-  );
+  if (!isIntelIosSimulator) {
+    await FirebaseCrashlyticsService.instance.log(
+      'App started successfully - ${DateTime.now()}',
+    );
+  }
 
   // إرسال خطأ اختبار لتفعيل Dashboard (فقط في Release mode)
-  if (!kDebugMode) {
+  if (!kDebugMode && !isIntelIosSimulator) {
     await FirebaseCrashlyticsService.instance.sendTestError();
   }
 
   await ConnectivityService.instance.initialize();
 
-  await PushNotificationService.instance.initialize();
+  if (!isIntelIosSimulator) {
+    await PushNotificationService.instance.initialize();
+  }
 
   await Future.wait<void>([
     setupServiceLocator(),
@@ -57,7 +66,9 @@ Future<void> main() async {
     // Wait a bit for app to initialize, then check for updates
     // This ensures the update dialog appears properly
     Future.delayed(const Duration(seconds: 2), () {
-      AppUpdateService.instance.checkForUpdate(forceUpdate: true).catchError((error) {
+      AppUpdateService.instance.checkForUpdate(forceUpdate: true).catchError((
+        error,
+      ) {
         // Silently handle errors - don't block app startup
         if (kDebugMode) {
           debugPrint('AppUpdateService: Failed to check for update: $error');
@@ -67,7 +78,7 @@ Future<void> main() async {
   }
 
   // Send Firebase token if user is logged in
-  if (isLoggedInUser) {
+  if (isLoggedInUser && !isIntelIosSimulator) {
     // Get saved language or use default 'ar'
     final savedLocale = await SharedPrefHelper.getString('locale');
     final lang = (savedLocale.isEmpty) ? 'ar' : savedLocale;

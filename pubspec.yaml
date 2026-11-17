@@ -62,7 +62,7 @@ dependencies:
   permission_handler: ^12.0.1
   
   # UI Components & Utils
-  pinput: ^3.0.1
+  pinput: ^7.0.0
   shimmer: ^3.0.0
   showcaseview: ^5.0.1
   flutter_html: ^3.0.0
@@ -70,7 +70,7 @@ dependencies:
   carousel_slider: ^5.0.0
   
   # Networking & Connectivity
-  connectivity_plus: ^6.1.0
+  connectivity_plus: 7.0.0
   pretty_dio_logger: ^1.4.0
   url_launcher: ^6.3.1
   
@@ -104,6 +104,7 @@ dev_dependencies:
   mocktail: any
 dependency_overrides:
   intl: ^0.18.1
+  html: 0.15.6
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -121,6 +122,7 @@ flutter:
   assets:
     - assets/logo/
     - assets/onboarding/
+    - assets/onboarding/figma/
     - assets/signup/
     - assets/fonts/
     - assets/login/

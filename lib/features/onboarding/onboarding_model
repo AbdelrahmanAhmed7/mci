@@ -1,11 +1,17 @@
 class OnboardingModel {
-  final String image;
+  final String topImage;
+  final String heroImage;
   final String title;
   final String description;
+  final bool isWelcome;
+  final bool cropHero;
 
-  OnboardingModel({
-    required this.image,
+  const OnboardingModel({
+    required this.topImage,
+    required this.heroImage,
     required this.title,
     required this.description,
+    this.isWelcome = false,
+    this.cropHero = false,
   });
 }

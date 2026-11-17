@@ -1,9 +1,5 @@
 import 'package:material_ui/material_ui.dart';
 
-/// The raw color palette exported from the Figma design.
-///
-/// These tokens are intentionally kept separate from [AppColors] until the
-/// new UI is migrated screen by screen.
 abstract final class FigmaColors {
   // Base and overlays
   static const white = Color(0xFFFFFFFF);

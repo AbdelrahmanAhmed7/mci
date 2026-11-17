@@ -1,5 +1,8 @@
+@file:Suppress("DEPRECATION")
+
 import java.util.Properties
 import java.io.FileInputStream
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     id("com.android.application")
@@ -28,10 +31,6 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
         isCoreLibraryDesugaringEnabled = true
-    }
-
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11.toString()
     }
 
     packagingOptions {
@@ -72,6 +71,11 @@ android {
         release {
             if (keystorePropertiesFile.exists()) {
                 signingConfig = signingConfigs.getByName("release")
+            } else {
+                // Keep local release APKs installable when no private release keystore
+                // has been configured yet. Replace this with the production keystore
+                // before publishing to Google Play.
+                signingConfig = signingConfigs.getByName("debug")
             }
             isMinifyEnabled = false
             isShrinkResources = false
@@ -94,6 +98,12 @@ android {
             dimension = "env"
             resValue("string", "app_name", "MediConsult Egypt")
         }
+    }
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget = JvmTarget.JVM_11
     }
 }
 

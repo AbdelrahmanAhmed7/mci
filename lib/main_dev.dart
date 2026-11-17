@@ -19,6 +19,7 @@ import 'package:mediconsult/core/di/service_locator.dart';
 import 'package:mediconsult/core/helpers/extension.dart';
 import 'package:mediconsult/core/helpers/shared_pref_helper.dart';
 import 'package:mediconsult/core/network/connectivity_service.dart';
+import 'package:mediconsult/core/helpers/runtime_platform.dart';
 import 'package:mediconsult/core/services/firebase_crashlytics_service.dart';
 import 'package:mediconsult/core/services/firebase_token_service.dart';
 import 'package:mediconsult/features/notifications/service/push_notifications_service.dart';
@@ -34,17 +35,22 @@ Future<void> main() async {
 
   await _clearDataOnReinstall();
 
-  await Future.wait<void>([
-    EasyLocalization.ensureInitialized(),
-    Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform),
-  ]);
-
-  await FirebaseCrashlyticsService.instance.initialize();
-  await FirebaseCrashlyticsService.instance.log('DEV App started - ${DateTime.now()}');
+  await EasyLocalization.ensureInitialized();
+  if (!isIntelIosSimulator) {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+    await FirebaseCrashlyticsService.instance.initialize();
+    await FirebaseCrashlyticsService.instance.log(
+      'DEV App started - ${DateTime.now()}',
+    );
+  }
   // Do NOT send test crash in dev to keep logs clean
 
   await ConnectivityService.instance.initialize();
-  await PushNotificationService.instance.initialize();
+  if (!isIntelIosSimulator) {
+    await PushNotificationService.instance.initialize();
+  }
 
   await Future.wait<void>([
     setupServiceLocator(),
@@ -52,7 +58,7 @@ Future<void> main() async {
     checkOnboardingStatus(),
   ]);
 
-  if (isLoggedInUser) {
+  if (isLoggedInUser && !isIntelIosSimulator) {
     final savedLocale = await SharedPrefHelper.getString('locale');
     final lang = savedLocale.isEmpty ? 'ar' : savedLocale;
     FirebaseTokenService.instance.sendTokenToBackend(lang);
@@ -90,14 +96,20 @@ Future<void> main() async {
 }
 
 checkIfLoggedInUser() async {
-  String? userToken = await SharedPrefHelper.getSecuredString(SharedPrefKeys.userToken);
+  String? userToken = await SharedPrefHelper.getSecuredString(
+    SharedPrefKeys.userToken,
+  );
   isLoggedInUser = !userToken.isNullOrEmpty();
 }
 
 checkOnboardingStatus() async {
-  final hasSeen = await SharedPrefHelper.getBool(SharedPrefKeys.hasSeenOnboarding);
+  final hasSeen = await SharedPrefHelper.getBool(
+    SharedPrefKeys.hasSeenOnboarding,
+  );
   shouldShowOnboarding = !hasSeen;
-  debugPrint('[DEV] Onboarding: hasSeen=$hasSeen, shouldShow=$shouldShowOnboarding');
+  debugPrint(
+    '[DEV] Onboarding: hasSeen=$hasSeen, shouldShow=$shouldShowOnboarding',
+  );
 }
 
 Future<void> _clearDataOnReinstall() async {
