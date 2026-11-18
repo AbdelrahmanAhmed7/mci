@@ -1,4 +1,5 @@
 import 'package:go_router/go_router.dart';
+import 'package:flutter/services.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:mediconsult/core/constants/constants.dart';
 import 'package:mediconsult/core/helpers/shared_pref_helper.dart';
@@ -15,6 +16,14 @@ class OnboardingScreen extends StatefulWidget {
 class _OnboardingScreenState extends State<OnboardingScreen> {
   final PageController _controller = PageController();
   int _currentPage = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    // Keep the 430x932 Figma coordinates aligned with the real system bars.
+    // The bars remain native and overlay the app; we do not draw mock bars.
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+  }
 
   final List<OnboardingModel> _pages = const [
     OnboardingModel(

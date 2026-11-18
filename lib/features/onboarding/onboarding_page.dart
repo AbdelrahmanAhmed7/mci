@@ -214,7 +214,7 @@ class OnboardingPage extends StatelessWidget {
 
   Widget _actions() {
     return Positioned(
-      left: 17,
+      left: 18,
       top: 766,
       width: 396,
       child: Column(
