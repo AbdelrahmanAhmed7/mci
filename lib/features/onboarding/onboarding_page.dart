@@ -43,13 +43,13 @@ class OnboardingPage extends StatelessWidget {
                     if (model.isWelcome) _welcomeBackground(),
                     _statusBar(),
                     Positioned(
-                      top: model.isWelcome ? 250 : 4,
-                      left: model.isWelcome ? 0 : 100,
-                      width: model.isWelcome ? 430 : 230,
-                      height: model.isWelcome ? 431 : 230,
+                      top: 4,
+                      left: 100,
+                      width: 230,
+                      height: 230,
                       child: Image.asset(model.topImage, fit: BoxFit.contain),
                     ),
-                    if (!model.isWelcome) _hero(),
+                    _hero(),
                     model.isWelcome ? _welcomeCopy() : _content(),
                     if (!model.isWelcome && onBack != null) _backButton(),
                     _progress(),
@@ -111,6 +111,16 @@ class OnboardingPage extends StatelessWidget {
   }
 
   Widget _hero() {
+    if (model.isWelcome) {
+      return Positioned(
+        left: 0,
+        top: 380,
+        width: 430,
+        height: 287,
+        child: Image.asset(model.heroImage, fit: BoxFit.contain),
+      );
+    }
+
     if (model.cropHero) {
       return Positioned(
         left: 65,
@@ -143,7 +153,7 @@ class OnboardingPage extends StatelessWidget {
     return Positioned(
       left: 38,
       right: 38,
-      top: 625,
+      top: 199,
       child: Column(
         children: [
           Text(

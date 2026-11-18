@@ -19,7 +19,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   final List<OnboardingModel> _pages = const [
     OnboardingModel(
       topImage: 'assets/onboarding/figma/welcome_top.png',
-      heroImage: '',
+      heroImage: 'assets/onboarding/figma/welcome_hero.png',
       title: 'onboarding.welcome_title',
       description: 'onboarding.welcome_description',
       isWelcome: true,
