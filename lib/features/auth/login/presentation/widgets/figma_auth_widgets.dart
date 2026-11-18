@@ -4,6 +4,7 @@ import 'package:mediconsult/core/theming/figma_colors.dart';
 
 const _authBackground = FigmaColors.blue25;
 const _authBlue = FigmaColors.blue500;
+const _accountBackground = Color(0xFFFAFBFF);
 
 class FigmaAuthPage extends StatefulWidget {
   final Widget child;
@@ -312,12 +313,12 @@ class _FigmaAccountPageState extends State<FigmaAccountPage> {
         statusBarColor: Colors.transparent,
         statusBarIconBrightness: Brightness.dark,
         statusBarBrightness: Brightness.light,
-        systemNavigationBarColor: _authBackground,
+        systemNavigationBarColor: _accountBackground,
         systemNavigationBarIconBrightness: Brightness.dark,
         systemNavigationBarDividerColor: Colors.transparent,
       ),
       child: Scaffold(
-        backgroundColor: _authBackground,
+        backgroundColor: _accountBackground,
         body: SizedBox.expand(
           child: FittedBox(
             fit: BoxFit.cover,

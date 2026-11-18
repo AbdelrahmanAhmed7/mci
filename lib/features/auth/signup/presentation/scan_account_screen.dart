@@ -12,7 +12,7 @@ class ScanAccountScreen extends StatelessWidget {
     onBack: () => context.pop(),
     child: Stack(
       children: [
-        const FigmaProgress(activeStep: 1),
+        const FigmaProgress(activeStep: 2),
         const Positioned(
           left: 21,
           top: 186,
@@ -45,12 +45,12 @@ class ScanAccountScreen extends StatelessWidget {
         ),
         Positioned(
           left: 21,
-          top: 288,
+          top: 317,
           child: Container(
             width: 388,
-            height: 253,
+            height: 194,
             decoration: BoxDecoration(
-              color: const Color(0xFFE8EFFD),
+              color: const Color(0xFF121E38),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Center(
@@ -58,14 +58,14 @@ class ScanAccountScreen extends StatelessWidget {
                 width: 310,
                 height: 156,
                 decoration: BoxDecoration(
-                  border: Border.all(color: FigmaColors.blue500, width: 2),
+                  border: Border.all(color: const Color(0xFF31578D), width: 1),
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: const Center(
                   child: Icon(
-                    Icons.credit_card_outlined,
+                    Icons.camera_alt_outlined,
                     size: 40,
-                    color: FigmaColors.blue500,
+                    color: Color(0xFF5576A7),
                   ),
                 ),
               ),
@@ -81,22 +81,11 @@ class ScanAccountScreen extends StatelessWidget {
               const SizedBox(height: 16),
               SizedBox(
                 width: 397,
-                height: 52,
-                child: OutlinedButton(
-                  onPressed: () => context.push('/signup/manual'),
-                  style: OutlinedButton.styleFrom(
-                    side: const BorderSide(color: FigmaColors.blue500),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: const Text(
-                    'Enter Manually',
-                    style: TextStyle(
-                      fontFamily: 'Inter',
-                      fontSize: 16,
-                      color: FigmaColors.blue500,
-                    ),
+                height: 24,
+                child: Center(
+                  child: FigmaAuthBackLink(
+                    text: 'Enter Manually',
+                    onPressed: () => context.push('/signup/manual'),
                   ),
                 ),
               ),

@@ -50,7 +50,7 @@ class CreateAccountScreen extends StatelessWidget {
             child: FigmaAccountCard(
               title: 'Scan National ID',
               description: 'We extract your details, you review them.',
-              icon: Icons.badge_outlined,
+              icon: Icons.center_focus_strong,
               recommended: true,
               onTap: () => context.push('/signup/scan'),
             ),
