@@ -112,8 +112,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: FigmaAuthTextField(
                   controller: _identifier,
                   hintText: _tab == 0
-                      ? '01001234567'
-                      : (_tab == 1 ? '2000000' : '29801010101010'),
+                      ? 'Enter phone number'
+                      : (_tab == 1 ? 'Enter MCI ID' : 'Enter National ID'),
                   keyboardType: TextInputType.phone,
                   validator: (value) => value == null || value.trim().isEmpty
                       ? 'Please enter your ID or phone number'
@@ -137,7 +137,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 top: 473,
                 child: FigmaAuthTextField(
                   controller: _password,
-                  hintText: 'Enter your password',
+                  hintText: 'Enter password',
                   obscureText: true,
                   validator: (value) => value == null || value.isEmpty
                       ? 'Please enter your password'

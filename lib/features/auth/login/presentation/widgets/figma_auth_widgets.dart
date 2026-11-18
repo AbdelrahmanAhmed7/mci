@@ -117,6 +117,11 @@ class _FigmaAuthTextFieldState extends State<FigmaAuthTextField> {
         decoration: InputDecoration(
           labelText: widget.labelText,
           hintText: widget.hintText,
+          hintStyle: const TextStyle(
+            fontFamily: 'Inter',
+            fontSize: 16,
+            color: FigmaColors.neutral400,
+          ),
           helperText: widget.helperText,
           helperStyle: const TextStyle(
             fontFamily: 'Inter',

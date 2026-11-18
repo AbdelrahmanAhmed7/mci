@@ -78,7 +78,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
             top: 340,
             child: FigmaAuthTextField(
               controller: _password,
-              hintText: 'Create password',
+              hintText: 'Enter new password',
               obscureText: true,
               helperText: 'Your password must be at least 8 characters',
               validator: (value) {
@@ -107,7 +107,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
             top: 473,
             child: FigmaAuthTextField(
               controller: _confirm,
-              hintText: 'Confirm password',
+              hintText: 'Re-enter new password',
               obscureText: true,
               validator: (value) {
                 if (value == null || value.isEmpty)

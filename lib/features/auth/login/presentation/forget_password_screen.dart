@@ -55,7 +55,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
             top: 431,
             child: FigmaAuthTextField(
               controller: _phone,
-              hintText: '01001234567',
+              hintText: 'Enter phone number',
               keyboardType: TextInputType.phone,
               validator: (value) => value == null || value.trim().isEmpty
                   ? 'Please enter your phone number'
