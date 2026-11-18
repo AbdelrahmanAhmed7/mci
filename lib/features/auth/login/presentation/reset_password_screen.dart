@@ -1,261 +1,161 @@
-import 'package:material_ui/material_ui.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mediconsult/core/constants/app_assets.dart';
-import 'package:mediconsult/core/theming/app_text_styles.dart';
-import 'package:mediconsult/core/widgets/auth_base_layout.dart';
+import 'package:mediconsult/core/utils/language_helper.dart';
 import 'package:mediconsult/features/auth/login/presentation/logic/reset_password/cubit/reset_password_cubit.dart';
 import 'package:mediconsult/features/auth/login/presentation/logic/reset_password/reset_password_state.dart';
+import 'package:mediconsult/features/auth/login/presentation/widgets/figma_auth_widgets.dart';
 import 'package:mediconsult/shared/widgets/app_snack_bar.dart';
-import 'package:easy_localization/easy_localization.dart';
-import 'package:mediconsult/features/auth/signup/presentation/widgets/app_text_field.dart';
-import 'package:mediconsult/core/utils/language_helper.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
   final String phoneNumber;
   const ResetPasswordScreen({super.key, required this.phoneNumber});
-
   @override
   State<ResetPasswordScreen> createState() => _ResetPasswordScreenState();
 }
 
 class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _newPasswordController = TextEditingController();
-  final _confirmPasswordController = TextEditingController();
-
+  final _password = TextEditingController();
+  final _confirm = TextEditingController();
   @override
   void dispose() {
-    _newPasswordController.dispose();
-    _confirmPasswordController.dispose();
+    _password.dispose();
+    _confirm.dispose();
     super.dispose();
   }
 
-  void _showSuccessDialog() {
-    showGeneralDialog(
+  void _success() {
+    showDialog<void>(
       context: context,
       barrierDismissible: false,
-      barrierColor: Colors.black.withValues(alpha: 0.4),
-      transitionDuration: const Duration(milliseconds: 400),
-      pageBuilder: (context, anim1, anim2) {
-        return Center(
-          child: Container(
-            width: 345.w,
-            height: 424.h,
-            padding: EdgeInsets.all(20.w),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20.r),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  width: 90.w,
-                  height: 90.w,
-                  decoration: const BoxDecoration(
-                    color: Color(0xff64AB5E),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    Icons.check_circle,
-                    color: Colors.white,
-                    size: 70.w,
-                  ),
-                ),
-                SizedBox(height: 43.h),
-                Text(
-                  'auth.reset_password.congratulations'.tr(),
-                  style: AppTextStyles.font20BlackSemiBold(
-                    context,
-                  ).copyWith(fontSize: 24.sp, decoration: TextDecoration.none),
-                ),
-                SizedBox(height: 16.h),
-                Text(
-                  'auth.reset_password.success_message'.tr(),
-                  style: AppTextStyles.font14GreyRegular(
-                    context,
-                  ).copyWith(decoration: TextDecoration.none),
-                  textAlign: TextAlign.center,
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-      transitionBuilder: (context, anim1, anim2, child) {
-        return ScaleTransition(
-          scale: CurvedAnimation(parent: anim1, curve: Curves.easeOutBack),
-          child: child,
-        );
-      },
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: const Text('Password changed', textAlign: TextAlign.center),
+        content: const Text(
+          'Your password was changed successfully.',
+          textAlign: TextAlign.center,
+        ),
+      ),
     );
-
     Future.delayed(const Duration(seconds: 2), () {
-      if (!mounted) return;
-      Navigator.of(context).pop();
-      context.go('/login');
+      if (mounted) {
+        Navigator.of(context).pop();
+        context.go('/login');
+      }
     });
   }
 
   @override
-  Widget build(BuildContext context) {
-    return AuthBaseLayout(
-      title: 'auth.reset_password.title'.tr(),
-      onBack: () => context.push('/otp-password', extra: widget.phoneNumber),
-      child: Form(
-        key: _formKey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // ===== Image =====
-            Center(
-              child: Image.asset(
-                AppAssets.resetPassword,
-                height: 151.h,
-                width: 233.w,
+  Widget build(BuildContext context) => FigmaAuthPage(
+    child: Form(
+      key: _formKey,
+      child: Stack(
+        children: [
+          const Positioned(
+            left: 58,
+            top: 199,
+            child: FigmaAuthTitle(
+              title: 'Create New password',
+              description: 'Set a new password to keep your account secure.',
+            ),
+          ),
+          const Positioned(
+            left: 17,
+            top: 319,
+            child: Text(
+              'New password',
+              style: TextStyle(
+                fontSize: 14,
+                color: Color(0xFF1C1C1C),
+                fontWeight: FontWeight.w500,
               ),
             ),
-
-            SizedBox(height: 24.h),
-
-            // ===== Description =====
-            Text(
-              'auth.reset_password.description'.tr(),
-              style: AppTextStyles.font14GreyRegular(context),
-              textAlign: TextAlign.start,
-            ),
-
-            SizedBox(height: 40.h),
-
-            // ===== New Password =====
-            Text(
-              'auth.reset_password.new_password'.tr(),
-              style: AppTextStyles.font14BlackMedium(context),
-            ),
-            SizedBox(height: 8.h),
-            AppTextField(
-              controller: _newPasswordController,
-              hintText: 'auth.reset_password.new_password_placeholder'.tr(),
-              isPassword: true,
-              prefixImagePath: AppAssets.passwordIcon,
+          ),
+          Positioned(
+            left: 17,
+            top: 340,
+            child: FigmaAuthTextField(
+              controller: _password,
+              hintText: 'Create password',
+              obscureText: true,
+              helperText: 'Your password must be at least 8 characters',
               validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'auth.reset_password.validation.new_password_required'
-                      .tr();
-                }
-                if (value.length < 8) {
-                  return 'auth.reset_password.validation.password_length'.tr();
-                }
+                if (value == null || value.isEmpty)
+                  return 'Please enter a new password';
+                if (value.length < 8)
+                  return 'Password must be at least 8 characters';
                 return null;
               },
             ),
-
-            SizedBox(height: 20.h),
-
-            // ===== Confirm Password =====
-            Text(
-              'auth.reset_password.confirm_password'.tr(),
-              style: AppTextStyles.font14BlackMedium(context),
+          ),
+          const Positioned(
+            left: 17,
+            top: 452,
+            child: Text(
+              'Confirm password',
+              style: TextStyle(
+                fontSize: 14,
+                color: Color(0xFF1C1C1C),
+                fontWeight: FontWeight.w500,
+              ),
             ),
-            SizedBox(height: 8.h),
-            AppTextField(
-              controller: _confirmPasswordController,
-              hintText: 'auth.reset_password.confirm_password_placeholder'.tr(),
-              isPassword: true,
-              prefixImagePath: AppAssets.passwordIcon,
+          ),
+          Positioned(
+            left: 17,
+            top: 473,
+            child: FigmaAuthTextField(
+              controller: _confirm,
+              hintText: 'Confirm password',
+              obscureText: true,
               validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'auth.reset_password.validation.confirm_password_required'
-                      .tr();
-                }
-                if (value != _newPasswordController.text) {
-                  return 'auth.reset_password.validation.passwords_not_match'
-                      .tr();
-                }
+                if (value == null || value.isEmpty)
+                  return 'Please confirm your password';
+                if (value != _password.text) return 'Passwords do not match';
                 return null;
               },
             ),
-
-            SizedBox(height: 40.h),
-
-            // ===== Button =====
-            BlocConsumer<ResetPasswordCubit, ResetPasswordState>(
+          ),
+          Positioned(
+            left: 16,
+            top: 538,
+            child: BlocConsumer<ResetPasswordCubit, ResetPasswordState>(
               listener: (context, state) {
-                if (state is Success) {
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    _showSuccessDialog();
-                  });
-                }
-                if (state is Failed) {
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    showAppSnackBar(context, state.error, isError: true);
-                  });
-                }
+                if (state is Success) _success();
+                if (state is Failed)
+                  showAppSnackBar(context, state.error, isError: true);
               },
-              builder: (context, state) {
-                final isLoading = state is Loading;
-                return GestureDetector(
-                  onTap: isLoading
-                      ? null
-                      : () {
-                          if (_formKey.currentState!.validate()) {
-                            final newPassword = LanguageHelper.convertArabicToEnglishNumerals(
-                              _newPasswordController.text.trim(),
-                            );
-                            final confirmPassword = LanguageHelper.convertArabicToEnglishNumerals(
-                              _confirmPasswordController.text.trim(),
-                            );
-                            context.read<ResetPasswordCubit>().resetPassword(
-                              widget.phoneNumber,
-                              newPassword,
-                              confirmPassword,
-                              context.locale.languageCode,
-                            );
-                          }
-                        },
-                  child: Container(
-                    width: double.infinity,
-                    height: 56.h,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.r),
-                      gradient: LinearGradient(
-                        colors: isLoading
-                            ? [Colors.grey.shade400, Colors.grey.shade500]
-                            : [
-                                const Color(0xFF4285F4),
-                                const Color(0xFF0139FE),
-                              ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                    ),
-                    alignment: Alignment.center,
-                    child: isLoading
-                        ? SizedBox(
-                            width: 20.w,
-                            height: 20.w,
-                            child: const CircularProgressIndicator(
-                              color: Colors.white,
-                              strokeWidth: 2,
-                            ),
-                          )
-                        : Text(
-                            'auth.reset_password.confirm_button'.tr(),
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16.sp,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
+              builder: (context, state) => Column(
+                children: [
+                  FigmaAuthButton(
+                    text: 'Reset',
+                    loading: state is Loading,
+                    onPressed: () {
+                      if (!_formKey.currentState!.validate()) return;
+                      context.read<ResetPasswordCubit>().resetPassword(
+                        widget.phoneNumber,
+                        LanguageHelper.convertArabicToEnglishNumerals(
+                          _password.text.trim(),
+                        ),
+                        LanguageHelper.convertArabicToEnglishNumerals(
+                          _confirm.text.trim(),
+                        ),
+                        context.locale.languageCode,
+                      );
+                    },
                   ),
-                );
-              },
+                  const SizedBox(height: 9),
+                  FigmaAuthBackLink(
+                    text: 'Back to Sign in',
+                    onPressed: () => context.go('/login'),
+                  ),
+                ],
+              ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
-    );
-  }
+    ),
+  );
 }

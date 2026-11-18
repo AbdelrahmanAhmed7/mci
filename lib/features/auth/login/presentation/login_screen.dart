@@ -1,228 +1,215 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/gestures.dart';
-import 'package:material_ui/material_ui.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mediconsult/core/constants/app_assets.dart';
-import 'package:mediconsult/core/theming/app_colors.dart';
-import 'package:mediconsult/core/theming/app_text_styles.dart';
-import 'package:mediconsult/core/utils/app_button.dart';
+import 'package:mediconsult/core/utils/language_helper.dart';
 import 'package:mediconsult/features/auth/login/presentation/logic/login_cubit.dart';
 import 'package:mediconsult/features/auth/login/presentation/logic/login_state.dart';
-import 'package:mediconsult/features/auth/signup/presentation/widgets/app_text_field.dart';
+import 'package:mediconsult/features/auth/login/presentation/widgets/figma_auth_widgets.dart';
 import 'package:mediconsult/shared/widgets/app_snack_bar.dart';
-import 'package:mediconsult/core/utils/language_helper.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
-
   @override
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
-  final cardOrPhoneController = TextEditingController();
-  final passwordController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    _clearFields();
-  }
-
-  void _clearFields() {
-    cardOrPhoneController.clear();
-    passwordController.clear();
-  }
+  final _identifier = TextEditingController();
+  final _password = TextEditingController();
+  int _tab = 0;
 
   @override
   void dispose() {
-    cardOrPhoneController.dispose();
-    passwordController.dispose();
+    _identifier.dispose();
+    _password.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.backgroundClr,
-      body: GestureDetector(
-        onTap: () {
-          FocusScope.of(context).unfocus();
-        },
-        behavior: HitTestBehavior.opaque,
-        child: SafeArea(
-          child: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Center(
-                    child: Image.asset(
-                      AppAssets.logo,
-                      width: 172.w,
-                      height: 38.h,
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-                  SizedBox(height: 43.h),
-
-                  Text(
-                    'auth.login.title'.tr(),
-                    style: AppTextStyles.font20BlackSemiBold(context),
-                  ),
-                  SizedBox(height: 12.h),
-                  Text(
-                    'auth.login.subtitle'.tr(),
-                    style: AppTextStyles.font16GreyRegular(context),
-                  ),
-                  SizedBox(height: 40.h),
-
-                  Text(
-                    'auth.login.card_id'.tr(),
-                    style: AppTextStyles.font16BlackMedium(context),
-                  ),
-                  SizedBox(height: 8.h),
-                  AppTextField(
-                    controller: cardOrPhoneController,
-                    hintText: 'auth.login.card_id_placeholder'.tr(),
-                    prefixImagePath: AppAssets.cardIcon,
-                    keyboardType: TextInputType.phone,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'auth.login.validation.card_id_required'.tr();
-                      }
-                      if (!value.startsWith('20')) {
-                        return 'auth.login.validation.card_id_start'.tr();
-                      }
-                      if (value.length != 7) {
-                        return 'auth.login.validation.card_id_length'.tr();
-                      }
-                      if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
-                        return 'auth.login.validation.card_id_numbers'.tr();
-                      }
-                      return null;
-                    },
-                  ),
-                  SizedBox(height: 16.h),
-
-                  Text(
-                    'auth.login.password'.tr(),
-                    style: AppTextStyles.font16BlackMedium(context),
-                  ),
-                  SizedBox(height: 8.h),
-                  AppTextField(
-                    controller: passwordController,
-                    hintText: 'auth.login.password_placeholder'.tr(),
-                    isPassword: true,
-                    prefixImagePath: AppAssets.passwordIcon,
-                    validator: (value) {
-                      // فقط التحقق من أن الحقل غير فارغ - بدون validation للطول
-                      if (value == null || value.isEmpty) {
-                        return 'auth.login.validation.password_required'.tr();
-                      }
-                      return null;
-                    },
-                  ),
-                  SizedBox(height: 8.h),
-
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: TextButton(
-                      onPressed: () {
-                        context.push('/forget-password');
-                      },
-                      child: Text(
-                        'auth.login.forgot_password'.tr(),
-                        style: TextStyle(
-                          color: AppColors.primaryClr,
-                          fontSize: 13.sp,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 28.h),
-
-                  BlocConsumer<LoginCubit, LoginState>(
-                    listener: (context, state) {
-                      if (state is Success) {
-                        WidgetsBinding.instance.addPostFrameCallback((_) {
-                          showAppSnackBar(
-                            context,
-                            'auth.login.login_successful'.tr(),
-                          );
-                          _clearFields();
-                          context.go('/home');
-                        });
-                      } else if (state is Failed) {
-                        WidgetsBinding.instance.addPostFrameCallback((_) {
-                          showAppSnackBar(context, state.error, isError: true);
-                        });
-                      }
-                    },
-                    builder: (context, state) {
-                      final isLoading = state is Loading;
-
-                      return AppButton(
-                        text: isLoading
-                            ? 'auth.login.logging_in'.tr()
-                            : 'auth.login.login_button'.tr(),
-                        isLoading: isLoading,
-                        useGradient: true,
-                        onPressed: isLoading
-                            ? null
-                            : () {
-                                if (_formKey.currentState!.validate()) {
-                                  final cardOrPhone = LanguageHelper.convertArabicToEnglishNumerals(
-                                    cardOrPhoneController.text.trim(),
-                                  );
-                                  final password = LanguageHelper.convertArabicToEnglishNumerals(
-                                    passwordController.text.trim(),
-                                  );
-                                  context.read<LoginCubit>().login(
-                                    cardOrPhone,
-                                    password,
-                                    context.locale.languageCode,
-                                  );
-                                }
-                              },
-                      );
-                    },
-                  ),
-                  SizedBox(height: 31.h),
-
-                  Center(
-                    child: Text.rich(
-                      TextSpan(
-                        text: 'auth.login.dont_have_account'.tr(),
-                        style: TextStyle(
-                          fontSize: 13.sp,
-                          color: Colors.grey[700],
-                        ),
-                        children: [
-                          TextSpan(
-                            text: 'auth.login.register'.tr(),
-                            style: TextStyle(
-                              color: AppColors.primaryClr,
-                              fontWeight: FontWeight.w600,
-                            ),
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () {
-                                context.push('/signup');
-                              },
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
+    return FigmaAuthPage(
+      child: GestureDetector(
+        onTap: FocusScope.of(context).unfocus,
+        child: Form(
+          key: _formKey,
+          child: Stack(
+            children: [
+              const Positioned(
+                left: 58,
+                top: 199,
+                child: FigmaAuthTitle(
+                  title: 'Welcome back',
+                  description: 'Sign in to your Mediconsult Membership',
+                ),
               ),
-            ),
+              Positioned(
+                left: 36,
+                top: 296,
+                width: 358,
+                height: 44,
+                child: Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    children: ['Phone', 'MCI ID', 'National ID']
+                        .asMap()
+                        .entries
+                        .map((entry) {
+                          final selected = _tab == entry.key;
+                          return Expanded(
+                            child: GestureDetector(
+                              onTap: () => setState(() => _tab = entry.key),
+                              child: Container(
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  color: selected
+                                      ? const Color(0xFFE8EFFD)
+                                      : Colors.transparent,
+                                  borderRadius: BorderRadius.circular(9),
+                                ),
+                                child: Text(
+                                  entry.value,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: selected
+                                        ? const Color(0xFF3860F0)
+                                        : const Color(0xFF747474),
+                                    fontWeight: selected
+                                        ? FontWeight.w600
+                                        : FontWeight.w400,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        })
+                        .toList(),
+                  ),
+                ),
+              ),
+              const Positioned(
+                left: 17,
+                top: 366,
+                child: Text(
+                  'Phone number',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Color(0xFF1C1C1C),
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+              Positioned(
+                left: 17,
+                top: 387,
+                child: FigmaAuthTextField(
+                  controller: _identifier,
+                  hintText: _tab == 0
+                      ? '01001234567'
+                      : (_tab == 1 ? '2000000' : '29801010101010'),
+                  keyboardType: TextInputType.phone,
+                  validator: (value) => value == null || value.trim().isEmpty
+                      ? 'Please enter your ID or phone number'
+                      : null,
+                ),
+              ),
+              const Positioned(
+                left: 17,
+                top: 452,
+                child: Text(
+                  'Password',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Color(0xFF1C1C1C),
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+              Positioned(
+                left: 17,
+                top: 473,
+                child: FigmaAuthTextField(
+                  controller: _password,
+                  hintText: 'Enter your password',
+                  obscureText: true,
+                  validator: (value) => value == null || value.isEmpty
+                      ? 'Please enter your password'
+                      : null,
+                ),
+              ),
+              Positioned(
+                left: 17,
+                top: 571,
+                child: BlocConsumer<LoginCubit, LoginState>(
+                  listener: (context, state) {
+                    if (state is Success) {
+                      showAppSnackBar(
+                        context,
+                        'auth.login.login_successful'.tr(),
+                      );
+                      context.go('/home');
+                    }
+                    if (state is Failed)
+                      showAppSnackBar(context, state.error, isError: true);
+                  },
+                  builder: (context, state) => Column(
+                    children: [
+                      FigmaAuthButton(
+                        text: 'Login',
+                        loading: state is Loading,
+                        onPressed: () {
+                          if (!_formKey.currentState!.validate()) return;
+                          context.read<LoginCubit>().login(
+                            LanguageHelper.convertArabicToEnglishNumerals(
+                              _identifier.text.trim(),
+                            ),
+                            LanguageHelper.convertArabicToEnglishNumerals(
+                              _password.text.trim(),
+                            ),
+                            context.locale.languageCode,
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 9),
+                      FigmaAuthBackLink(
+                        text: 'Forgot password?',
+                        onPressed: () => context.push('/forget-password'),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Positioned(
+                left: 23,
+                top: 862,
+                width: 384,
+                child: Center(
+                  child: Text.rich(
+                    TextSpan(
+                      text: 'New to MediConsult? ',
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Color(0xFF747474),
+                      ),
+                      children: [
+                        TextSpan(
+                          text: 'Create an account',
+                          style: const TextStyle(color: Color(0xFF5983F3)),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () => context.push('/signup'),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),
