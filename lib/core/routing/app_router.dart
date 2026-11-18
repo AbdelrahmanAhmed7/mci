@@ -54,11 +54,16 @@ import 'package:mediconsult/features/network/presentation/network_screen.dart';
 import 'package:mediconsult/features/network/logic/network_cubit.dart';
 import 'package:mediconsult/features/policy/presentation/policy_screen.dart';
 import 'package:mediconsult/features/onboarding/onboarding_screen.dart';
-import 'package:mediconsult/features/splash/presentation/splash_screen.dart';
 
 class AppRouter {
+  static String get initialLocation {
+    if (isLoggedInUser) return '/home';
+    if (shouldShowOnboarding) return '/onboarding';
+    return '/login';
+  }
+
   static final GoRouter router = GoRouter(
-    initialLocation: '/splash',
+    initialLocation: initialLocation,
     redirect: (context, state) {
       if (state.uri.path == '/choose') {
         return isLoggedInUser ? '/home' : '/login';
@@ -66,10 +71,6 @@ class AppRouter {
       return null;
     },
     routes: [
-      GoRoute(
-        path: '/splash',
-        builder: (context, state) => const SplashScreen(),
-      ),
       GoRoute(
         path: '/onboarding',
         builder: (context, state) => const OnboardingScreen(),
