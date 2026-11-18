@@ -1,4 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/services.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:mediconsult/features/onboarding/onboarding_model';
 
@@ -29,33 +30,43 @@ class OnboardingPage extends StatelessWidget {
         final scale = (constraints.maxWidth / 430)
             .clamp(0.75, constraints.maxHeight / 932)
             .toDouble();
-        return ColoredBox(
-          color: const Color(0xfffafbff),
-          child: Center(
-            child: Transform.scale(
-              scale: scale,
-              child: SizedBox(
-                width: 430,
-                height: 932,
-                child: Stack(
-                  clipBehavior: Clip.hardEdge,
-                  children: [
-                    if (model.isWelcome) _welcomeBackground(),
-                    _statusBar(),
-                    Positioned(
-                      top: 4,
-                      left: 100,
-                      width: 230,
-                      height: 230,
-                      child: Image.asset(model.topImage, fit: BoxFit.contain),
-                    ),
-                    _hero(),
-                    model.isWelcome ? _welcomeCopy() : _content(),
-                    if (!model.isWelcome && onBack != null) _backButton(),
-                    _progress(),
-                    _actions(),
-                    _homeIndicator(),
-                  ],
+        return AnnotatedRegion<SystemUiOverlayStyle>(
+          value: SystemUiOverlayStyle(
+            statusBarColor: Colors.transparent,
+            statusBarIconBrightness: Brightness.dark,
+            statusBarBrightness: Brightness.light,
+            systemNavigationBarColor: model.isWelcome
+                ? const Color(0xffdae0ff)
+                : const Color(0xfffafbff),
+            systemNavigationBarIconBrightness: Brightness.dark,
+            systemNavigationBarDividerColor: Colors.transparent,
+          ),
+          child: ColoredBox(
+            color: const Color(0xfffafbff),
+            child: Center(
+              child: Transform.scale(
+                scale: scale,
+                child: SizedBox(
+                  width: 430,
+                  height: 932,
+                  child: Stack(
+                    clipBehavior: Clip.hardEdge,
+                    children: [
+                      if (model.isWelcome) _welcomeBackground(),
+                      Positioned(
+                        top: 4,
+                        left: 100,
+                        width: 230,
+                        height: 230,
+                        child: Image.asset(model.topImage, fit: BoxFit.contain),
+                      ),
+                      _hero(),
+                      model.isWelcome ? _welcomeCopy() : _content(),
+                      if (!model.isWelcome && onBack != null) _backButton(),
+                      _progress(),
+                      _actions(),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -75,36 +86,6 @@ class OnboardingPage extends StatelessWidget {
             stops: [0.5, 0.87],
             colors: [Colors.white, Color(0xffdae0ff)],
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _statusBar() {
-    return Positioned(
-      top: 0,
-      left: 0,
-      right: 0,
-      height: 58,
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(20, 24, 18, 12),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const Text(
-              '9:41',
-              style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
-            ),
-            Row(
-              children: const [
-                Icon(Icons.signal_cellular_alt, size: 14),
-                SizedBox(width: 4),
-                Icon(Icons.wifi, size: 14),
-                SizedBox(width: 4),
-                Icon(Icons.battery_full, size: 16),
-              ],
-            ),
-          ],
         ),
       ),
     );
@@ -265,21 +246,6 @@ class OnboardingPage extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _homeIndicator() {
-    return Positioned(
-      left: 143,
-      bottom: 0,
-      width: 144,
-      height: 4,
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          color: const Color(0xe5060e16),
-          borderRadius: BorderRadius.circular(100),
-        ),
       ),
     );
   }
