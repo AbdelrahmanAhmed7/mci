@@ -1,6 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mediconsult/core/utils/language_helper.dart';
@@ -30,6 +30,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final identifierLabel = ['Phone number', 'MCI ID', 'National ID'][_tab];
     return FigmaAuthPage(
       child: GestureDetector(
         onTap: FocusScope.of(context).unfocus,
@@ -37,7 +38,7 @@ class _LoginScreenState extends State<LoginScreen> {
           key: _formKey,
           child: Stack(
             children: [
-              const Positioned(
+              Positioned(
                 left: 58,
                 top: 199,
                 child: FigmaAuthTitle(
@@ -49,12 +50,12 @@ class _LoginScreenState extends State<LoginScreen> {
                 left: 36,
                 top: 296,
                 width: 358,
-                height: 44,
+                height: 52,
                 child: Container(
-                  padding: const EdgeInsets.all(4),
+                  padding: const EdgeInsets.all(3),
                   decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
+                    color: const Color(0xFFE6E6E6),
+                    borderRadius: BorderRadius.circular(26),
                   ),
                   child: Row(
                     children: ['Phone', 'MCI ID', 'National ID']
@@ -69,16 +70,16 @@ class _LoginScreenState extends State<LoginScreen> {
                                 alignment: Alignment.center,
                                 decoration: BoxDecoration(
                                   color: selected
-                                      ? const Color(0xFFE8EFFD)
+                                      ? const Color(0xFF5983F3)
                                       : Colors.transparent,
-                                  borderRadius: BorderRadius.circular(9),
+                                  borderRadius: BorderRadius.circular(23),
                                 ),
                                 child: Text(
                                   entry.value,
                                   style: TextStyle(
                                     fontSize: 14,
                                     color: selected
-                                        ? const Color(0xFF3860F0)
+                                        ? Colors.white
                                         : const Color(0xFF747474),
                                     fontWeight: selected
                                         ? FontWeight.w600
@@ -93,11 +94,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
               ),
-              const Positioned(
+              Positioned(
                 left: 17,
                 top: 366,
                 child: Text(
-                  'Phone number',
+                  identifierLabel,
                   style: TextStyle(
                     fontSize: 14,
                     color: Color(0xFF1C1C1C),
@@ -176,7 +177,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           );
                         },
                       ),
-                      const SizedBox(height: 9),
+                      const SizedBox(height: 16),
                       FigmaAuthBackLink(
                         text: 'Forgot password?',
                         onPressed: () => context.push('/forget-password'),

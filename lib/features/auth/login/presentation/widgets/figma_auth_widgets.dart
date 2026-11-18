@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:mediconsult/core/theming/figma_colors.dart';
 
@@ -53,7 +53,10 @@ class _FigmaAuthPageState extends State<FigmaAuthPage> {
                       fit: BoxFit.contain,
                     ),
                   ),
-                  widget.child,
+                  DefaultTextStyle(
+                    style: const TextStyle(fontFamily: 'Inter'),
+                    child: widget.child,
+                  ),
                 ],
               ),
             ),
@@ -106,12 +109,17 @@ class _FigmaAuthTextFieldState extends State<FigmaAuthTextField> {
         obscureText: _hidden,
         keyboardType: widget.keyboardType,
         validator: widget.validator,
-        style: const TextStyle(fontSize: 16, color: FigmaColors.neutral900),
+        style: const TextStyle(
+          fontFamily: 'Inter',
+          fontSize: 16,
+          color: FigmaColors.neutral900,
+        ),
         decoration: InputDecoration(
           labelText: widget.labelText,
           hintText: widget.hintText,
           helperText: widget.helperText,
           helperStyle: const TextStyle(
+            fontFamily: 'Inter',
             color: FigmaColors.neutral500,
             fontSize: 12,
           ),
@@ -193,6 +201,7 @@ class FigmaAuthButton extends StatelessWidget {
             : Text(
                 text,
                 style: const TextStyle(
+                  fontFamily: 'Inter',
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
                 ),
@@ -222,6 +231,7 @@ class FigmaAuthTitle extends StatelessWidget {
             title,
             textAlign: TextAlign.center,
             style: const TextStyle(
+              fontFamily: 'Inter',
               fontSize: 25,
               height: 1.15,
               fontWeight: FontWeight.w700,
@@ -233,6 +243,7 @@ class FigmaAuthTitle extends StatelessWidget {
             description,
             textAlign: TextAlign.center,
             style: const TextStyle(
+              fontFamily: 'Inter',
               fontSize: 16,
               height: 1.35,
               color: FigmaColors.neutral500,

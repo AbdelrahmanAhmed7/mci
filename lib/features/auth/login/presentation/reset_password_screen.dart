@@ -1,5 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mediconsult/core/utils/language_helper.dart';
@@ -145,7 +145,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                       );
                     },
                   ),
-                  const SizedBox(height: 9),
+                  const SizedBox(height: 16),
                   FigmaAuthBackLink(
                     text: 'Back to Sign in',
                     onPressed: () => context.go('/login'),
