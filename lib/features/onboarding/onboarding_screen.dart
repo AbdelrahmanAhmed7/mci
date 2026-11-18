@@ -29,6 +29,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       heroImage: 'assets/onboarding/figma/page1_hero.png',
       title: 'onboarding.request_approvals',
       description: 'onboarding.request_approvals_description',
+      heroLeft: -9,
+      heroWidth: 439,
     ),
     OnboardingModel(
       topImage: 'assets/onboarding/figma/page2_top.png',
@@ -41,7 +43,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       heroImage: 'assets/onboarding/figma/page3_hero.png',
       title: 'onboarding.help',
       description: 'onboarding.help_description',
-      cropHero: true,
+      heroLeft: 65,
+      heroWidth: 300,
     ),
   ];
 

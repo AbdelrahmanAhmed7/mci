@@ -121,29 +121,10 @@ class OnboardingPage extends StatelessWidget {
       );
     }
 
-    if (model.cropHero) {
-      return Positioned(
-        left: 65,
-        top: 199,
-        width: 300,
-        height: 293,
-        child: ClipRect(
-          child: OverflowBox(
-            alignment: Alignment.center,
-            maxWidth: 2282,
-            child: Image.asset(
-              model.heroImage,
-              width: 2282,
-              fit: BoxFit.contain,
-            ),
-          ),
-        ),
-      );
-    }
     return Positioned(
-      left: -9,
+      left: model.heroLeft,
       top: 199,
-      width: 439,
+      width: model.heroWidth,
       height: 293,
       child: Image.asset(model.heroImage, fit: BoxFit.contain),
     );
@@ -210,14 +191,17 @@ class OnboardingPage extends StatelessWidget {
   Widget _backButton() {
     return Positioned(
       left: 16,
-      top: 452,
+      top: 88,
       child: GestureDetector(
         onTap: onBack,
         behavior: HitTestBehavior.opaque,
         child: const SizedBox(
-          width: 40,
-          height: 40,
-          child: Icon(Icons.arrow_back, size: 22),
+          width: 60,
+          height: 52,
+          child: Align(
+            alignment: Alignment(0.33, 0),
+            child: Icon(Icons.arrow_back_ios_new, size: 18),
+          ),
         ),
       ),
     );
@@ -230,11 +214,11 @@ class OnboardingPage extends StatelessWidget {
       right: 0,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: List.generate(pageCount, (index) {
-          final active = index == pageIndex;
+        children: List.generate(pageCount * 2 - 1, (index) {
+          if (index.isOdd) return const SizedBox(width: 3);
+          final active = index ~/ 2 == pageIndex;
           return AnimatedContainer(
             duration: const Duration(milliseconds: 180),
-            margin: const EdgeInsets.symmetric(horizontal: 1.5),
             width: active ? 19 : 10,
             height: 7,
             decoration: BoxDecoration(
