@@ -14,8 +14,10 @@ import 'package:mediconsult/features/auth/login/presentation/login_screen.dart';
 import 'package:mediconsult/features/auth/login/presentation/password_otp.dart';
 import 'package:mediconsult/features/auth/login/presentation/reset_password_screen.dart';
 import 'package:mediconsult/features/auth/signup/presentation/account_verified_screen.dart';
+import 'package:mediconsult/features/auth/signup/presentation/create_account_screen.dart';
 import 'package:mediconsult/features/auth/signup/presentation/logic/signup_cubit.dart';
-import 'package:mediconsult/features/auth/signup/presentation/sign_up_screen.dart';
+import 'package:mediconsult/features/auth/signup/presentation/manual_sign_up_screen.dart';
+import 'package:mediconsult/features/auth/signup/presentation/scan_account_screen.dart';
 import 'package:mediconsult/features/chronic_medicines/screens/chronic_medicines_screen.dart';
 import 'package:mediconsult/features/e_card/presentation/cubit/e_card_cubit.dart';
 import 'package:mediconsult/features/e_card/presentation/screens/e_card_screen.dart';
@@ -77,12 +79,18 @@ class AppRouter {
       ),
       GoRoute(
         path: '/signup',
-        builder: (context, state) {
-          return BlocProvider(
-            create: (context) => sl<SignupCubit>(),
-            child: const SignUpScreen(),
-          );
-        },
+        builder: (context, state) => const CreateAccountScreen(),
+      ),
+      GoRoute(
+        path: '/signup/scan',
+        builder: (context, state) => const ScanAccountScreen(),
+      ),
+      GoRoute(
+        path: '/signup/manual',
+        builder: (context, state) => BlocProvider(
+          create: (context) => sl<SignupCubit>(),
+          child: const ManualSignUpScreen(),
+        ),
       ),
       GoRoute(
         path: '/login',
