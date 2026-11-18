@@ -169,18 +169,15 @@ class OnboardingPage extends StatelessWidget {
 
   Widget _backButton() {
     return Positioned(
-      left: 16,
-      top: 88,
+      left: 20,
+      top: 96,
       child: GestureDetector(
         onTap: onBack,
         behavior: HitTestBehavior.opaque,
         child: const SizedBox(
-          width: 60,
-          height: 52,
-          child: Align(
-            alignment: Alignment(0.33, 0),
-            child: Icon(Icons.arrow_back_ios_new, size: 18),
-          ),
+          width: 32,
+          height: 32,
+          child: Icon(Icons.chevron_left, size: 32, color: Color(0xff646e7c)),
         ),
       ),
     );
