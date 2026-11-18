@@ -27,9 +27,6 @@ class OnboardingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final scale = (constraints.maxWidth / 430)
-            .clamp(0.75, constraints.maxHeight / 932)
-            .toDouble();
         return AnnotatedRegion<SystemUiOverlayStyle>(
           value: SystemUiOverlayStyle(
             statusBarColor: Colors.transparent,
@@ -43,9 +40,10 @@ class OnboardingPage extends StatelessWidget {
           ),
           child: ColoredBox(
             color: const Color(0xfffafbff),
-            child: Center(
-              child: Transform.scale(
-                scale: scale,
+            child: SizedBox.expand(
+              child: FittedBox(
+                fit: BoxFit.cover,
+                alignment: Alignment.center,
                 child: SizedBox(
                   width: 430,
                   height: 932,
