@@ -21,6 +21,18 @@ class AppAssets {
   static const String resetPassword = 'assets/login/reset_password.png';
   static const String backward = 'assets/onboarding/backward.png';
 
+  // Figma account creation assets
+  static const String accountBack = 'assets/signup/figma/back_selection.png';
+  static const String accountScanMethod = 'assets/signup/figma/scan_method.png';
+  static const String accountManualMethod =
+      'assets/signup/figma/manual_method.png';
+  static const String accountCaptureGuide =
+      'assets/signup/figma/capture_guide.png';
+  static const String accountCaptureLine =
+      'assets/signup/figma/capture_line.png';
+  static const String accountCaptureCamera =
+      'assets/signup/figma/capture_camera.png';
+
   // home screen assets
   static const String profile = 'assets/home/profile.png';
   static const String card = 'assets/home/card.png';

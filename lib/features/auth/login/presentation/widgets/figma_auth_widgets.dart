@@ -1,5 +1,6 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
+import 'package:mediconsult/core/constants/app_assets.dart';
 import 'package:mediconsult/core/theming/figma_colors.dart';
 
 const _authBackground = FigmaColors.blue25;
@@ -359,10 +360,10 @@ class _FigmaAccountPageState extends State<FigmaAccountPage> {
                                 bottom: 8,
                               ),
                               alignment: Alignment.centerLeft,
-                              icon: const Icon(
-                                Icons.chevron_left,
-                                size: 24,
-                                color: FigmaColors.neutral700,
+                              icon: Image.asset(
+                                AppAssets.accountBack,
+                                width: 20,
+                                height: 20,
                               ),
                             ),
                           ),
@@ -439,7 +440,7 @@ class FigmaProgress extends StatelessWidget {
 class FigmaAccountCard extends StatelessWidget {
   final String title;
   final String description;
-  final IconData icon;
+  final String iconAsset;
   final bool recommended;
   final VoidCallback onTap;
 
@@ -447,7 +448,7 @@ class FigmaAccountCard extends StatelessWidget {
     super.key,
     required this.title,
     required this.description,
-    required this.icon,
+    required this.iconAsset,
     required this.onTap,
     this.recommended = false,
   });
@@ -473,7 +474,12 @@ class FigmaAccountCard extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.only(top: 2),
-            child: Icon(icon, size: 24, color: _authBlue),
+            child: Image.asset(
+              iconAsset,
+              width: 24,
+              height: 24,
+              fit: BoxFit.contain,
+            ),
           ),
           const SizedBox(width: 8),
           Expanded(

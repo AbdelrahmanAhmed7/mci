@@ -1,5 +1,6 @@
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:mediconsult/core/constants/app_assets.dart';
 import 'package:mediconsult/core/theming/figma_colors.dart';
 import 'package:mediconsult/features/auth/login/presentation/widgets/figma_auth_widgets.dart';
 
@@ -54,19 +55,34 @@ class ScanAccountScreen extends StatelessWidget {
               borderRadius: BorderRadius.circular(20),
             ),
             child: Center(
-              child: Container(
+              child: SizedBox(
                 width: 310,
                 height: 156,
-                decoration: BoxDecoration(
-                  border: Border.all(color: const Color(0xFF31578D), width: 1),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: const Center(
-                  child: Icon(
-                    Icons.camera_alt_outlined,
-                    size: 40,
-                    color: Color(0xFF5576A7),
-                  ),
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Image.asset(
+                      AppAssets.accountCaptureGuide,
+                      width: 310,
+                      height: 156,
+                      fit: BoxFit.fill,
+                    ),
+                    Positioned(
+                      top: 2,
+                      left: 0,
+                      child: Image.asset(
+                        AppAssets.accountCaptureLine,
+                        width: 310,
+                        height: 2,
+                        fit: BoxFit.fill,
+                      ),
+                    ),
+                    Image.asset(
+                      AppAssets.accountCaptureCamera,
+                      width: 40,
+                      height: 40,
+                    ),
+                  ],
                 ),
               ),
             ),

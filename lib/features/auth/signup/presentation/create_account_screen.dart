@@ -1,5 +1,6 @@
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:mediconsult/core/constants/app_assets.dart';
 import 'package:mediconsult/core/theming/figma_colors.dart';
 import 'package:mediconsult/features/auth/login/presentation/widgets/figma_auth_widgets.dart';
 
@@ -50,7 +51,7 @@ class CreateAccountScreen extends StatelessWidget {
             child: FigmaAccountCard(
               title: 'Scan National ID',
               description: 'We extract your details, you review them.',
-              icon: Icons.center_focus_strong,
+              iconAsset: AppAssets.accountScanMethod,
               recommended: true,
               onTap: () => context.push('/signup/scan'),
             ),
@@ -61,7 +62,7 @@ class CreateAccountScreen extends StatelessWidget {
             child: FigmaAccountCard(
               title: 'Enter details manually',
               description: 'Takes about 2 minutes',
-              icon: Icons.edit_outlined,
+              iconAsset: AppAssets.accountManualMethod,
               onTap: () => context.push('/signup/manual'),
             ),
           ),

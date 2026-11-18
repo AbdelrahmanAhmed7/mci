@@ -124,6 +124,7 @@ flutter:
     - assets/onboarding/
     - assets/onboarding/figma/
     - assets/signup/
+    - assets/signup/figma/
     - assets/fonts/
     - assets/login/
     - assets/home/
