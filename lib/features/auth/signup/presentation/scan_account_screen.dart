@@ -2,6 +2,7 @@ import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:mediconsult/core/constants/app_assets.dart';
 import 'package:mediconsult/core/theming/figma_colors.dart';
+import 'package:mediconsult/core/utils/image_picker_service.dart';
 import 'package:mediconsult/features/auth/login/presentation/widgets/figma_auth_widgets.dart';
 
 class ScanAccountScreen extends StatelessWidget {
@@ -93,7 +94,15 @@ class ScanAccountScreen extends StatelessWidget {
           top: 541,
           child: Column(
             children: [
-              FigmaAuthButton(text: 'Allow Camera & Capture', onPressed: () {}),
+              FigmaAuthButton(
+                text: 'Allow Camera & Capture',
+                onPressed: () async {
+                  final image =
+                      await ImagePickerService.pickFromCameraWithPermission();
+                  if (!context.mounted || image == null) return;
+                  context.push('/signup/reading', extra: image.path);
+                },
+              ),
               const SizedBox(height: 16),
               SizedBox(
                 width: 397,

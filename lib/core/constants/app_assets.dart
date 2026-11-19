@@ -32,6 +32,8 @@ class AppAssets {
       'assets/signup/figma/capture_line.png';
   static const String accountCaptureCamera =
       'assets/signup/figma/capture_camera.png';
+  static const String accountCreatedSuccess =
+      'assets/signup/account_created_success.png';
 
   // home screen assets
   static const String profile = 'assets/home/profile.png';

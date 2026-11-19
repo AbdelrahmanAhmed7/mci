@@ -1,59 +1,77 @@
+import 'package:flutter/services.dart';
 import 'package:material_ui/material_ui.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 import 'package:mediconsult/core/constants/app_assets.dart';
-import 'package:mediconsult/core/theming/app_colors.dart';
-import 'package:mediconsult/core/theming/app_text_styles.dart';
-import 'package:mediconsult/core/utils/app_button.dart';
 
 class AccountVerifiedScreen extends StatelessWidget {
   const AccountVerifiedScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.backgroundClr,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              IconButton(
-                icon: const Icon(Icons.arrow_back_ios_new, color: Colors.black),
-                onPressed: () => Navigator.pop(context),
-              ),
-              SizedBox(height: 40.h),
-              Center(
-                child: Column(
-                  children: [
-                    Image.asset(
-                      AppAssets.accountVerified,
-                      width: 250.w,
-                      height: 263.h,
-                    ),
-                    SizedBox(height: 38.h),
-                    Text(
-                      'Account Verified',
-                      style: AppTextStyles.font16BlackMedium(context),
-                    ),
-                    SizedBox(height: 8.h),
-                    Text(
-                      'Congratulations, your account has been\n verified. You can start using the app',
-                      style: AppTextStyles.font14GreyRegular(context),
-                      textAlign: TextAlign.center,
-                    ),
-                    SizedBox(height: 57.h,),
-                    AppButton(text: 'Continue', onPressed: (){
-                      context.go('/home');
-                    }),
-                  ],
+  Widget build(BuildContext context) => AnnotatedRegion<SystemUiOverlayStyle>(
+    value: const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.dark,
+      statusBarBrightness: Brightness.light,
+      systemNavigationBarColor: Color(0xFFFAFBFF),
+      systemNavigationBarIconBrightness: Brightness.dark,
+      systemNavigationBarDividerColor: Colors.transparent,
+    ),
+    child: Scaffold(
+      backgroundColor: const Color(0xFFFAFBFF),
+      body: SizedBox.expand(
+        child: FittedBox(
+          fit: BoxFit.cover,
+          child: SizedBox(
+            width: 430,
+            height: 932,
+            child: Stack(
+              children: [
+                Positioned(
+                  top: 199,
+                  left: 67,
+                  width: 296,
+                  child: Column(
+                    children: [
+                      const Text(
+                        'Account Created\nSuccessfully!',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 28,
+                          height: 34 / 28,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF092324),
+                        ),
+                      ),
+                      const SizedBox(height: 15),
+                      Text(
+                        'You can now sign in and start using\nyour MediConsult benefits.',
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 16.068,
+                          height: 22.954 / 16.068,
+                          fontWeight: FontWeight.w500,
+                          color: Color(0xFF6B7280),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+                Positioned(
+                  top: 346,
+                  left: 0,
+                  width: 430,
+                  child: Image.asset(
+                    AppAssets.accountCreatedSuccess,
+                    width: 430,
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
 }

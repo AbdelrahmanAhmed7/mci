@@ -58,7 +58,8 @@ class CreateAccountScreen extends StatelessWidget {
           ),
           Positioned(
             left: 21,
-            top: 401,
+            // First card ends at 395, leaving a 20 px gap.
+            top: 408,
             child: FigmaAccountCard(
               title: 'Enter details manually',
               description: 'Takes about 2 minutes',

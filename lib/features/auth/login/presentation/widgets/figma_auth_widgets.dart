@@ -339,7 +339,10 @@ class _FigmaAccountPageState extends State<FigmaAccountPage> {
                         left: 16,
                         right: 16,
                         top: 16,
-                        bottom: 17,
+                        // The title and step text together need about 49 px.
+                        // Keep the top offset from the Figma layout while
+                        // leaving enough room for both lines.
+                        bottom: 10,
                       ),
                       decoration: const BoxDecoration(
                         border: Border(
@@ -458,7 +461,9 @@ class FigmaAccountCard extends StatelessWidget {
     onTap: onTap,
     child: Container(
       width: 388,
-      height: 83,
+      // The recommended card's description wraps to two lines beside the
+      // badge, so the original 83 px height was not enough for its content.
+      height: 93,
       padding: const EdgeInsets.all(17),
       decoration: BoxDecoration(
         color: recommended ? const Color(0xFFEBF3FF) : Colors.white,

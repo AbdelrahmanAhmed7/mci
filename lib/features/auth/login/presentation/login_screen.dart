@@ -70,7 +70,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 alignment: Alignment.center,
                                 decoration: BoxDecoration(
                                   color: selected
-                                      ? const Color(0xFF5983F3)
+                                      ? Colors.white
                                       : Colors.transparent,
                                   borderRadius: BorderRadius.circular(23),
                                 ),
@@ -79,10 +79,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                   style: TextStyle(
                                     fontSize: 14,
                                     color: selected
-                                        ? Colors.white
+                                        ? Colors.black
                                         : const Color(0xFF747474),
                                     fontWeight: selected
-                                        ? FontWeight.w600
+                                        ? FontWeight.bold
                                         : FontWeight.w400,
                                   ),
                                 ),

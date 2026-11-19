@@ -18,6 +18,7 @@ import 'package:mediconsult/features/auth/signup/presentation/create_account_scr
 import 'package:mediconsult/features/auth/signup/presentation/logic/signup_cubit.dart';
 import 'package:mediconsult/features/auth/signup/presentation/manual_sign_up_screen.dart';
 import 'package:mediconsult/features/auth/signup/presentation/scan_account_screen.dart';
+import 'package:mediconsult/features/auth/signup/presentation/reading_card_screen.dart';
 import 'package:mediconsult/features/chronic_medicines/screens/chronic_medicines_screen.dart';
 import 'package:mediconsult/features/e_card/presentation/cubit/e_card_cubit.dart';
 import 'package:mediconsult/features/e_card/presentation/screens/e_card_screen.dart';
@@ -84,6 +85,11 @@ class AppRouter {
       GoRoute(
         path: '/signup/scan',
         builder: (context, state) => const ScanAccountScreen(),
+      ),
+      GoRoute(
+        path: '/signup/reading',
+        builder: (context, state) =>
+            ReadingCardScreen(imagePath: state.extra as String),
       ),
       GoRoute(
         path: '/signup/manual',
