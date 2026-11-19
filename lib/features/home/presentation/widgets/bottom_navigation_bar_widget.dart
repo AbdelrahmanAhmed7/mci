@@ -140,7 +140,9 @@ class _NavItem extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             SizedBox(
-              height: 24.h,
+              // Keep the icon slot compact so the item also fits on devices
+              // where the bottom navigation receives a smaller height.
+              height: 20.h,
               child: selected
                   ? const SizedBox.shrink()
                   : _NavIcon(
@@ -150,7 +152,7 @@ class _NavItem extends StatelessWidget {
                       color: const Color(0xFF6B7280),
                     ),
             ),
-            SizedBox(height: 5.h),
+            SizedBox(height: 3.h),
             Text(
               label,
               maxLines: 1,
