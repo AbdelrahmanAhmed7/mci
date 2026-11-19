@@ -1,6 +1,5 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:mediconsult/core/theming/app_colors.dart';
 import 'package:mediconsult/core/widgets/smooth_shimmer.dart';
 
 class HomeLoadingWidget extends StatelessWidget {
@@ -14,19 +13,19 @@ class HomeLoadingWidget extends StatelessWidget {
           // Header Loading
           Container(
             height: 120.h,
-            color: AppColors.primaryClr,
+            color: const Color(0xFFFAFBFF),
             child: Padding(
               padding: EdgeInsets.all(16.w),
               child: Row(
                 children: [
                   SmoothShimmer(
-                    baseColor: Colors.white.withValues(alpha: 0.2),
-                    highlightColor: Colors.white.withValues(alpha: 0.4),
+                    baseColor: const Color(0xFFE5E7EB),
+                    highlightColor: const Color(0xFFF3F4F6),
                     child: Container(
                       width: 50.w,
                       height: 50.h,
                       decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.3),
+                        color: const Color(0xFFE5E7EB),
                         shape: BoxShape.circle,
                       ),
                     ),
@@ -37,26 +36,26 @@ class HomeLoadingWidget extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       SmoothShimmer(
-                        baseColor: Colors.white.withValues(alpha: 0.2),
-                        highlightColor: Colors.white.withValues(alpha: 0.4),
+                        baseColor: const Color(0xFFE5E7EB),
+                        highlightColor: const Color(0xFFF3F4F6),
                         child: Container(
                           height: 16.h,
                           width: 120.w,
                           decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.3),
+                            color: const Color(0xFFE5E7EB),
                             borderRadius: BorderRadius.circular(8.r),
                           ),
                         ),
                       ),
                       SizedBox(height: 8.h),
                       SmoothShimmer(
-                        baseColor: Colors.white.withValues(alpha: 0.2),
-                        highlightColor: Colors.white.withValues(alpha: 0.4),
+                        baseColor: const Color(0xFFE5E7EB),
+                        highlightColor: const Color(0xFFF3F4F6),
                         child: Container(
                           height: 12.h,
                           width: 80.w,
                           decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.3),
+                            color: const Color(0xFFE5E7EB),
                             borderRadius: BorderRadius.circular(6.r),
                           ),
                         ),
@@ -67,7 +66,7 @@ class HomeLoadingWidget extends StatelessWidget {
               ),
             ),
           ),
-          
+
           // Card Loading
           Padding(
             padding: EdgeInsets.all(16.w),
@@ -76,7 +75,7 @@ class HomeLoadingWidget extends StatelessWidget {
               borderRadius: BorderRadius.circular(12.r),
             ),
           ),
-          
+
           // Content Loading
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.w),
