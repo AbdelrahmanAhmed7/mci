@@ -264,11 +264,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                             child: Stack(
                               clipBehavior: Clip.none,
                               children: [
-                                Container(
-                                  width: double.infinity,
-                                  height: 130.h,
-                                  color: AppColors.primaryClr,
-                                ),
+                                // Reserve the overlap space for the card
+                                // without painting an extra blue band behind it.
+                                SizedBox(height: 130.h),
                                 Positioned(
                                   bottom: -70.h,
                                   left: 16.w,
