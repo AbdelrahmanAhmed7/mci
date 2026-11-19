@@ -261,27 +261,17 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                           // Wrap header in RepaintBoundary for better performance
                           RepaintBoundary(child: HomeHeaderWidget(data: data!)),
                           RepaintBoundary(
-                            child: Stack(
-                              clipBehavior: Clip.none,
-                              children: [
-                                // Reserve the overlap space for the card
-                                // without painting an extra blue band behind it.
-                                SizedBox(height: 130.h),
-                                Positioned(
-                                  bottom: -70.h,
-                                  left: 16.w,
-                                  right: 16.w,
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      context.push('/profile', extra: model);
-                                    },
-                                    child: UserPlanCardWidget(data: data),
-                                  ),
-                                ),
-                              ],
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 16.w),
+                              child: GestureDetector(
+                                onTap: () {
+                                  context.push('/profile', extra: model);
+                                },
+                                child: UserPlanCardWidget(data: data),
+                              ),
                             ),
                           ),
-                          SizedBox(height: 80.h),
+                          SizedBox(height: 16.h),
                           Container(
                             color: AppColors.lightGreyClr,
                             padding: EdgeInsets.symmetric(horizontal: 16.w),
