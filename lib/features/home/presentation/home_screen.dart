@@ -1,6 +1,7 @@
+import 'dart:math' as math;
+
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mediconsult/core/services/home_refresh_service.dart';
-import 'package:mediconsult/core/theming/app_colors.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mediconsult/features/home/presentation/cubit/cubit/home_cubit.dart';
 import 'package:mediconsult/features/home/presentation/cubit/cubit/home_state.dart';
@@ -158,45 +159,21 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     }
   }
 
-  int? _pageIndexForVisualIndex(int visualIndex) {
+  Future<void> _handleBottomNavigationTap(int visualIndex) async {
     switch (visualIndex) {
       case 0:
-        return 0;
-      case 1:
-        return 1;
-      case 3:
-        return 2;
-      case 4:
-        return 3;
-      default:
-        return null;
-    }
-  }
-
-  Future<void> _handleBottomNavigationTap(int visualIndex) async {
-    if (visualIndex == 2) {
-      await _openECardRoute();
-      return;
-    }
-
-    final pageIndex = _pageIndexForVisualIndex(visualIndex);
-    if (pageIndex == null) return;
-
-    switch (pageIndex) {
-      case 0:
-        if (mounted) {
-          setState(() {
-            _currentIndex = 0;
-          });
-        }
+        if (mounted) setState(() => _currentIndex = 0);
         break;
       case 1:
-        context.push('/network');
+        context.push('/approval-history');
         break;
       case 2:
-        context.push('/approval-request');
+        context.push('/network');
         break;
       case 3:
+        await _openECardRoute();
+        break;
+      case 4:
         final homeResponse = context.read<HomeCubit>().state.maybeWhen(
           loaded: (model) => model,
           orElse: () => null,
@@ -223,120 +200,146 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
   Widget _buildHomeContent(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.lightGreyClr,
+      backgroundColor: const Color(0xFFFAFBFF),
       body: SafeArea(
-        child: BlocBuilder<HomeCubit, HomeCubitState>(
-          builder: (context, state) {
-            return state.when(
-              initial: () => const HomeLoadingWidget(),
-              loading: () => const HomeLoadingWidget(),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final contentWidth = math.min(constraints.maxWidth, 430.0);
+            return Align(
+              alignment: Alignment.topCenter,
+              child: SizedBox(
+                width: contentWidth,
+                child: BlocBuilder<HomeCubit, HomeCubitState>(
+                  builder: (context, state) {
+                    return state.when(
+                      initial: () => const HomeLoadingWidget(),
+                      loading: () => const HomeLoadingWidget(),
 
-              /// when the data is loaded, show the page with the real data
-              loaded: (model) {
-                // Mark that we've loaded data at least once
-                if (!_hasLoadedOnce) {
-                  _hasLoadedOnce = true;
-                }
-                final data = model.data;
-                return NotificationListener<ScrollNotification>(
-                  onNotification: _onNotification,
-                  child: RefreshIndicator(
-                    onRefresh: () async {
-                      // Always allow refresh when user pulls down from top
-                      // The _canRefresh flag is mainly for preventing status bar pulls
-                      await context.read<HomeCubit>().refreshHomeInfo(
-                        LanguageHelper.getLanguageCode(context),
-                      );
-                    },
-                    // Prevent refresh when pulling from status bar
-                    displacement: 40.0,
-                    edgeOffset: 0.0,
-                    child: SingleChildScrollView(
-                      controller: _scrollController,
-                      physics: const AlwaysScrollableScrollPhysics(
-                        parent: ClampingScrollPhysics(),
-                      ),
-                      child: Column(
-                        children: [
-                          // Wrap header in RepaintBoundary for better performance
-                          RepaintBoundary(child: HomeHeaderWidget(data: data!)),
-                          RepaintBoundary(
-                            child: Stack(
-                              clipBehavior: Clip.none,
-                              children: [
-                                Container(
-                                  width: double.infinity,
-                                  height: 130.h,
-                                  color: AppColors.primaryClr,
-                                ),
-                                Positioned(
-                                  bottom: -70.h,
-                                  left: 16.w,
-                                  right: 16.w,
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      context.push('/profile', extra: model);
-                                    },
-                                    child: UserPlanCardWidget(data: data),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(height: 80.h),
-                          Container(
-                            color: AppColors.lightGreyClr,
-                            padding: EdgeInsets.symmetric(horizontal: 16.w),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                RepaintBoundary(
-                                  child: const QuickAccessWidget(),
-                                ),
-                                SizedBox(height: 24.h),
-                                if (data.approvals.any(
-                                  (approval) =>
-                                      approval.status.toLowerCase() ==
-                                      'reviewing',
-                                )) ...[
+                      /// when the data is loaded, show the page with the real data
+                      loaded: (model) {
+                        // Mark that we've loaded data at least once
+                        if (!_hasLoadedOnce) {
+                          _hasLoadedOnce = true;
+                        }
+                        final data = model.data;
+                        return NotificationListener<ScrollNotification>(
+                          onNotification: _onNotification,
+                          child: RefreshIndicator(
+                            onRefresh: () async {
+                              // Always allow refresh when user pulls down from top
+                              // The _canRefresh flag is mainly for preventing status bar pulls
+                              await context.read<HomeCubit>().refreshHomeInfo(
+                                LanguageHelper.getLanguageCode(context),
+                              );
+                            },
+                            // Prevent refresh when pulling from status bar
+                            displacement: 40.0,
+                            edgeOffset: 0.0,
+                            child: SingleChildScrollView(
+                              controller: _scrollController,
+                              physics: const AlwaysScrollableScrollPhysics(
+                                parent: ClampingScrollPhysics(),
+                              ),
+                              child: Column(
+                                children: [
+                                  // Wrap header in RepaintBoundary for better performance
                                   RepaintBoundary(
-                                    child: OngoingRequestWidget(data: data),
+                                    child: HomeHeaderWidget(data: data!),
                                   ),
+                                  RepaintBoundary(
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 16.w,
+                                      ),
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          context.push(
+                                            '/profile',
+                                            extra: model,
+                                          );
+                                        },
+                                        child: UserPlanCardWidget(
+                                          data: data,
+                                          onViewDigitalCard: () =>
+                                              context.push('/e-card'),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(height: 14.h),
+                                  if (data.approvals.any(
+                                    (approval) =>
+                                        approval.status.toLowerCase() ==
+                                        'reviewing',
+                                  ))
+                                    Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 16.w,
+                                      ),
+                                      child: RepaintBoundary(
+                                        child: OngoingRequestWidget(data: data),
+                                      ),
+                                    ),
                                   SizedBox(height: 24.h),
+                                  Container(
+                                    color: const Color(0xFFFAFBFF),
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 16.w,
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        RepaintBoundary(
+                                          child: const QuickAccessWidget(),
+                                        ),
+                                        SizedBox(height: 24.h),
+                                        RepaintBoundary(
+                                          child: const HealthTipsWidget(),
+                                        ),
+                                        SizedBox(height: 24.h),
+                                        RepaintBoundary(
+                                          child: const ExploreWidget(),
+                                        ),
+                                        SizedBox(height: 40.h),
+                                      ],
+                                    ),
+                                  ),
                                 ],
-                                RepaintBoundary(
-                                  child: const HealthTipsWidget(),
-                                ),
-                                SizedBox(height: 24.h),
-                                RepaintBoundary(child: const ExploreWidget()),
-                                SizedBox(height: 40.h),
-                              ],
+                              ),
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-              },
+                        );
+                      },
 
-              /// in case of error
-              failed: (message) => ErrorStateWidget(
-                error: message,
-                title: 'home.error_loading'.tr(),
-                onRetry: () {
-                  context.read<HomeCubit>().retry(
-                    LanguageHelper.getLanguageCode(context),
-                  );
-                },
+                      /// in case of error
+                      failed: (message) => ErrorStateWidget(
+                        error: message,
+                        title: 'home.error_loading'.tr(),
+                        onRetry: () {
+                          context.read<HomeCubit>().retry(
+                            LanguageHelper.getLanguageCode(context),
+                          );
+                        },
+                      ),
+                    );
+                  },
+                ),
               ),
             );
           },
         ),
       ),
-      bottomNavigationBar: BottomNavigationBarWidget(
-        currentIndex: _currentIndex,
-        onTap: _handleBottomNavigationTap,
+      bottomNavigationBar: LayoutBuilder(
+        builder: (context, constraints) => Center(
+          child: SizedBox(
+            width: math.min(constraints.maxWidth, 430.0),
+            child: BottomNavigationBarWidget(
+              currentIndex: _currentIndex,
+              onTap: _handleBottomNavigationTap,
+            ),
+          ),
+        ),
       ),
     );
   }
